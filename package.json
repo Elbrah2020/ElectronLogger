@@ -1,0 +1,24 @@
+{
+  "name": "electronlogger",
+  "version": "1.0.0",
+  "description": "Habbo2020 packetlogger written in NodeJS using Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elbrah2020/ElectronLogger.git"
+  },
+  "author": "Burak <burak@burak.fr>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Elbrah2020/ElectronLogger/issues"
+  },
+  "homepage": "https://github.com/Elbrah2020/ElectronLogger#readme",
+  "dependencies": {
+    "electron": "^5.0.3",
+    "electron-edge-js": "^12.4.0"
+  }
+}
