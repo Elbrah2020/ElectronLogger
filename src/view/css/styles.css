@@ -1,0 +1,12 @@
+.footer-navbar {
+	height: 32px;
+}
+
+.hidden {
+	display: none;
+}
+
+::selection {
+  color: none;
+  background: none;
+}

@@ -13,13 +13,17 @@ let mainWindow;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1052,
-    height: 600,
+    width: 600,
+    height: 400,
+    resizable: false,
+    alwaysOnTop: true,
     webPreferences:{
       nodeIntegration: true,
       nodeIntegrationInWorker: true
     }
   });
+
+  //mainWindow.setMenu(null);
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/src/view/index.html`);

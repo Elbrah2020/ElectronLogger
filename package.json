@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "buildinet": "dotnet build src/inetoptions/INETOptions.sln",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
