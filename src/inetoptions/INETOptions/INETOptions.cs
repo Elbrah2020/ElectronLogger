@@ -16,8 +16,7 @@ namespace INETOptions
 
         public static List<string> Overrides { get; }
 
-        public static string HTTPAddress { get; set; }
-        public static string HTTPSAddress { get; set; }
+        public static string ProxyAddress { get; set; }
 
         public static bool IsProxyEnabled { get; set; }
         public static bool IsIgnoringLocalTraffic { get; set; }
@@ -94,16 +93,7 @@ namespace INETOptions
 
         private static string GetJoinedAddresses()
         {
-            var addresses = new List<string>(2);
-            if (!string.IsNullOrWhiteSpace(HTTPAddress))
-            {
-                addresses.Add("http=" + HTTPAddress);
-            }
-            if (!string.IsNullOrWhiteSpace(HTTPSAddress))
-            {
-                addresses.Add("https=" + HTTPSAddress);
-            }
-            return string.Join(";", addresses);
+            return ProxyAddress;
         }
         private static string GetJoinedOverrides()
         {

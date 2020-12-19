@@ -10,8 +10,7 @@ namespace INETOptions
 
         public async Task<object> SetProxy(dynamic proxyAddress)
         {
-            INETOptions.HTTPAddress = proxyAddress;
-            INETOptions.HTTPSAddress = proxyAddress;
+            INETOptions.ProxyAddress = proxyAddress;
             INETOptions.IsProxyEnabled = true;
             INETOptions.IsIgnoringLocalTraffic = true;
             INETOptions.Save();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title>ElectronLogger</title>
+      <title>ElectronLogger - Loading..</title>
       <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
       <link href="./css/styles.css" rel="stylesheet" crossorigin="anonymous">
       <script type="text/javascript" src="./bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -11,53 +11,58 @@
       </script>
    </head>
    <body>
-      <nav class="navbar navbar-expand navbar-dark bg-dark">
-         <div class="container-fluid">
-            <a class="navbar-brand" href="#">ElectronLogger</a>
-            <div class="collapse navbar-collapse">
-               <ul class="navbar-nav me-auto mb-lg-0">
-                  <li class="nav-item active">
-                     <a class="nav-link" href="#">Connection</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="#">Tools</a>
-                  </li>
-               </ul>
-               <ul class="navbar-nav">
-                  <li class="nav-item">
-                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">v1.0</a>
-                  </li>
-               </ul>
+      <div id="loadingInterface">
+         <h1>Loading..</h1>
+      </div>
+      <div id="packetloggerInterface" class="hidden">
+         <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <div class="container-fluid">
+               <a class="navbar-brand" href="#">ElectronLogger</a>
+               <div class="collapse navbar-collapse">
+                  <ul class="navbar-nav me-auto mb-lg-0">
+                     <li class="nav-item active">
+                        <a class="nav-link" href="#">Connection</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#">Tools</a>
+                     </li>
+                  </ul>
+                  <ul class="navbar-nav">
+                     <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">v1.0</a>
+                     </li>
+                  </ul>
+               </div>
             </div>
-         </div>
-      </nav>
-      <main class="container">
-         <div class="bg-light">
-            <h1>Hello</h1>
-         </div>
-      </main>
-      <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">
-         <div class="container-fluid">
-            <div class="collapse navbar-collapse">
-               <ul class="navbar-nav me-auto mb-lg-0">
-                  <li class="nav-item">
-                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
-                     <span class="badge bg-danger hidden">Disconnected</span>
-                     <span class="badge bg-success hidden">Connected</span>
-                     <span class="badge bg-primary">Waiting for connection..</span>
-                     </a>
-                  </li>
-               </ul>
-               <ul class="navbar-nav">
-                  <li class="nav-item">
-                     <a class="nav-link" href="#" id="externalDiscordButton">Discord</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="#" id="externalGithubButton">GitHub</a>
-                  </li>
-               </ul>
+         </nav>
+         <main class="container">
+            <div class="bg-light">
+               <h1>Hello</h1>
             </div>
-         </div>
-      </nav>
+         </main>
+         <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">
+            <div class="container-fluid">
+               <div class="collapse navbar-collapse">
+                  <ul class="navbar-nav me-auto mb-lg-0">
+                     <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
+                           <span class="badge bg-danger hidden">Disconnected</span>
+                           <span class="badge bg-success hidden">Connected</span>
+                           <span id="packetLoggerFooterState" class="badge bg-secondary">Ready</span>
+                        </a>
+                     </li>
+                  </ul>
+                  <ul class="navbar-nav">
+                     <li class="nav-item">
+                        <a class="nav-link" href="#" id="externalDiscordButton">Discord</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#" id="externalGithubButton">GitHub</a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+      </div>
    </body>
 </html>
