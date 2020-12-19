@@ -1,12 +1,25 @@
 const Logger = require('../../core/Logger');
 const { shell } = require('electron');
 
-
 var logger = new Logger();
 
 window.onload = () => {
 	$('#externalGithubButton').click(() => {
 		shell.openExternal('https://github.com/Elbrah2020/ElectronLogger');
+	});
+
+	$('#startLoggingButton').click(async () => {
+		await logger.startLogging();
+		$('#startLoggingButton').addClass('hidden');
+		$('#stopLoggingButton').removeClass('hidden');
+		setStatusLabel('primary', 'Waiting for connection..');
+	});
+
+	$('#stopLoggingButton').click(async () => {
+		await logger.stopLogging();
+		$('#stopLoggingButton').addClass('hidden');
+		$('#startLoggingButton').removeClass('hidden');
+		setStatusLabel('secondary', 'Ready ');
 	});
 
 	(async () => {

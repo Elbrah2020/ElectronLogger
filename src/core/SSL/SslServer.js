@@ -13,11 +13,7 @@ class SslServer {
 	async startServer(port, sslHandler) {
 		this.server = https.createServer(this.options, sslHandler);
 
-		return await this.server.listen(port);
-	}
-
-	async stopServer() {
-		return await this.server.close();
+		return await this.server.listen(port, '127.0.0.1');
 	}
 }
 

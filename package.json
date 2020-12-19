@@ -22,6 +22,7 @@
     "electron": "^5.0.3",
     "electron-edge-js": "^12.4.0",
     "http-proxy": "^1.18.1",
+    "http-string-parser": "0.0.6",
     "is-elevated": "^3.0.0",
     "is-gzip": "^2.0.0",
     "node-gzip": "^1.1.2",

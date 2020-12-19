@@ -35,10 +35,14 @@
                </div>
             </div>
          </nav>
-         <main class="container">
-            <div class="bg-light">
-               <h1>Hello</h1>
-            </div>
+         <main class="container" id="connectionTab">
+            <center>
+               <p class="display-3">
+                  Just press the button and load the client ☺<br/>
+                  <button type="button" class="btn btn-success" id="startLoggingButton">Start logging</button>
+                  <button type="button" class="btn btn-danger hidden" id="stopLoggingButton">Stop logging</button>
+               </p>
+            </center>
          </main>
          <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">
             <div class="container-fluid">
@@ -46,8 +50,6 @@
                   <ul class="navbar-nav me-auto mb-lg-0">
                      <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
-                           <span class="badge bg-danger hidden">Disconnected</span>
-                           <span class="badge bg-success hidden">Connected</span>
                            <span id="packetLoggerFooterState" class="badge bg-secondary">Ready</span>
                         </a>
                      </li>

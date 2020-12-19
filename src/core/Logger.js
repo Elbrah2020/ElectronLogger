@@ -3,6 +3,7 @@ const CertificateManager = require('./SSL/CertificateManager');
 const WindowsInetBridge = require('./SSL/WindowsInetBridge');
 const SslServer = require('./SSL/SslServer');
 const SslHandler = require('./SSL/SslHandler');
+const SslProxy = require('./SSL/SslProxy');
 
 class Logger extends EventEmitter {
 	async initialize() {
@@ -12,11 +13,20 @@ class Logger extends EventEmitter {
 		this.emit('ready');
 		this.windowsInetBridge = new WindowsInetBridge();
 
-		console.log(await this.windowsInetBridge.setProxy('https=127.0.0.1:3334'));
 		this.sslServer = new SslServer();
-		this.sslServer.startServer(3335, SslHandler);
+		this.sslProxy = new SslProxy({ host: '127.0.0.1', port: 3335 }, ['images.habbo.com', 'www.habbo.com', 'www.habbo.com.br', 'www.habbo.com.tr', 'www.habbo.de', 'www.habbo.es', 'www.habbo.fi', 'www.habbo.fr', 'www.habbo.it', 'www.habbo.nl']);
 
-		//console.log(await this.windowsInetBridge.disableProxy());
+		await this.sslProxy.startServer(3334);
+		await this.sslServer.startServer(3335, SslHandler);
+	}
+
+	async startLogging() {
+		await this.windowsInetBridge.setProxy('https=127.0.0.1:3334')
+		return true;
+	}
+
+	async stopLogging() {
+		await this.windowsInetBridge.disableProxy();
 	}
 }
 
