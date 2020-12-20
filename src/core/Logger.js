@@ -4,6 +4,7 @@ const WindowsInetBridge = require('./SSL/WindowsInetBridge');
 const SslServer = require('./SSL/SslServer');
 const SslHandler = require('./SSL/SslHandler');
 const SslProxy = require('./SSL/SslProxy');
+const WebsocketServer = require('./WebSocket/WebsocketServer');
 
 class Logger extends EventEmitter {
 	async initialize() {
@@ -21,11 +22,15 @@ class Logger extends EventEmitter {
 	}
 
 	async startLogging() {
-		await this.windowsInetBridge.setProxy('https=127.0.0.1:3334')
+		await this.windowsInetBridge.setProxy('https=127.0.0.1:3334');
+
+		this.websocketServer = new WebsocketServer(3336);
+
 		return true;
 	}
 
 	async stopLogging() {
+		this.websocketServer.stop();
 		await this.windowsInetBridge.disableProxy();
 	}
 }

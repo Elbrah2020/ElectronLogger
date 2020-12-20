@@ -37,7 +37,7 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 			}
 
 			if (req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.wasm.framework.unityweb?')) {
-				body = body.toString().replace('webSocketState.instances[id]={url:urlStr,ws:null}', 'webSocketState.instances[id]={url:"ws://localhost:30001/",ws:null}');
+				body = body.toString().replace('webSocketState.instances[id]={url:urlStr,ws:null}', 'webSocketState.instances[id]={url:"ws://localhost:3336/",ws:null}');
 
 				res.setHeader('access-control-allow-headers', 'Accept, Content-Type, Origin, X-Requested-With, Pragma, X-App-Key, Cache-Control');
 				res.setHeader('access-control-allow-methods', 'POST, GET, OPTIONS');
