@@ -1,0 +1,43 @@
+@font-face {
+  font-family: 'Consolas';
+  src: url('Consolas.ttf') format('truetype');
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#console {
+	padding: 8px;
+	width: 97.5%;
+	height: 98%;
+	background-color: #272822;
+	cursor: crosshair;
+	user-select: text;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	position: fixed;
+	font-size: 14px;
+	font-family: 'Consolas', Fallback, sans-serif;
+}
+
+.red {
+	color: #901826;
+}
+
+.blue {
+	color: #02539B;
+}
+
+.green {
+	color: #72A605;
+}
+
+.gray {
+	color: #C5C5C5;
+}
+
+.yellow {
+	color: #B2B248;
+}
