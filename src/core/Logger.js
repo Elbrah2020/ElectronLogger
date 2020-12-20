@@ -24,12 +24,20 @@ class Logger extends EventEmitter {
 	async startLogging() {
 		await this.windowsInetBridge.setProxy('https=127.0.0.1:3334');
 
-		this.websocketServer = new WebsocketServer(3336);
+		this.websocketServer = new WebsocketServer();
+		this.websocketServer.startServer(3336);
+
+		this.websocketServer.on('connected', () => {
+			this.emit('connected');
+		});
 
 		return true;
 	}
 
 	async stopLogging() {
+		if (this.websocketServer.packetloggerWindow) {
+			this.websocketServer.packetloggerWindow.destroy();
+		}
 		this.websocketServer.stop();
 		await this.windowsInetBridge.disableProxy();
 	}

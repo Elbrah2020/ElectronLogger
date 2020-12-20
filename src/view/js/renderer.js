@@ -19,16 +19,20 @@ window.onload = () => {
 		await logger.stopLogging();
 		$('#stopLoggingButton').addClass('hidden');
 		$('#startLoggingButton').removeClass('hidden');
-		setStatusLabel('secondary', 'Ready ');
+		setStatusLabel('secondary', 'Ready');
 	});
 
 	(async () => {
 		logger.on('ready', () => {
-			setStatusLabel('secondary', 'Ready ');
+			setStatusLabel('secondary', 'Ready');
 
 			$('#loadingInterface').fadeOut('slow', () => {
 				$('#packetloggerInterface').fadeIn('slow');
 			});
+		});
+
+		logger.on('connected', () => {
+			setStatusLabel('success', 'Connected');
 		});
 
 		await logger.initialize();

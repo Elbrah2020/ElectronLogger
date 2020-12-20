@@ -59,7 +59,6 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 });
 
 module.exports = (req, res) => {
-	console.log(req.url);
 	let proxyOptions = { target: 'https://' + req.headers.host }
 
 	if (req.url.startsWith('/client/v2/')

@@ -6,15 +6,32 @@ const HabboMessage = require('../Protocol/HabboMessage');
 const ChaCha20 = require('../Crypto/JSChaCha20');
 const RSA = require('../Crypto/RSA');
 
+const BrowserWindow = require('electron').remote.BrowserWindow;
 const reverse = require('buffer-reverse');
+const EventEmitter = require('events');
 const getPort = require('get-port');
 const WebSocket = require('ws');
 const tls = require('tls');
 const net = require('net');
 const fs = require('fs');
 
-class WebsocketServer {
-	constructor(port) {
+class WebsocketServer extends EventEmitter {
+	startServer(port) {
+		this.packetloggerWindow = new BrowserWindow({
+			height: 600,
+			width: 700,
+			show: false,
+			closable: false,
+			webPreferences:{
+				nodeIntegration: true,
+				nodeIntegrationInWorker: true
+			}
+		});
+
+		this.packetloggerWindow.setMenu(null);
+
+		this.packetloggerWindow.loadURL(`file://${__dirname}/../../view/logger.html`);
+
 		const sslServerOptions = {
 			key: fs.readFileSync('./certs/habbo/game.habbo.com.key'),
 			cert: fs.readFileSync('./certs/habbo/game.habbo.com.crt'),
@@ -85,8 +102,6 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 									ws.diffieHellman.serverPublicKey = new BigInteger(serverRSA.verify(packet.readString()), 10);
 									ws.diffieHellman.serverSharedKey = ws.diffieHellman.serverPublicKey.modPow(ws.diffieHellman.mitmClientPrivateKey, ws.diffieHellman.prime);
 
-									console.log('SERVER SHARED KEY', ws.diffieHellman.serverSharedKey.toString());
-
 									ws.diffieHellman.mitmServerPublicKey = ws.diffieHellman.generator.modPow(ws.diffieHellman.mitmClientPrivateKey, ws.diffieHellman.prime);
 									let completeDhHandshake = new HabboMessageBuilder(packet.header);
 									completeDhHandshake.appendString(clientRSA.sign(ws.diffieHellman.mitmServerPublicKey.toString()));
@@ -120,7 +135,9 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 			});
 
 			ws.tlsServer = tls.createServer(sslServerOptions, tlsServerClearStream => {
-				console.log('CLIENT CONNECTED');
+				this.emit('connected');
+				this.packetloggerWindow.show();
+
 				ws.tlsServerClearStream = tlsServerClearStream;
 				tlsServerClearStream.on('data', async buffer => {
 
@@ -150,8 +167,6 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 									let completeDhHandshake = new HabboMessageBuilder(packet.header);
 									completeDhHandshake.appendString(serverRSA.encrypt(ws.diffieHellman.mitmClientPublicKey.toString()));
 									this.sendOutgoing(ws, completeDhHandshake);
-
-									console.log('UNITY SHARED KEY', ws.diffieHellman.unityClientSharedKey.toString());
 								break;
 								default:
 									this.sendOutgoing(ws, packet);
@@ -221,8 +236,10 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 
 		if (isOutgoing) {
 			console.log('Outgoing[' + packet.header + ']' + ' -> ' + packet.getMessageBody(true));
+			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header);
 		} else {
 			console.log('Incoming[' + packet.header + ']' + ' -> ' + packet.getMessageBody(true));
+			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header);
 		}
 
 		let buffer = packet.originalBuffer ? packet.originalBuffer : packet.get();

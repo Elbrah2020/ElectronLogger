@@ -16,7 +16,7 @@ function createWindow () {
     width: 600,
     height: 400,
     resizable: false,
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     webPreferences:{
       nodeIntegration: true,
       nodeIntegrationInWorker: true
