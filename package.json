@@ -19,13 +19,16 @@
   },
   "homepage": "https://github.com/Elbrah2020/ElectronLogger#readme",
   "dependencies": {
+    "buffer-reverse": "^1.0.1",
     "electron": "^5.0.3",
     "electron-edge-js": "^12.4.0",
+    "get-port": "^5.1.1",
     "http-proxy": "^1.18.1",
     "http-string-parser": "0.0.6",
     "is-elevated": "^3.0.0",
     "is-gzip": "^2.0.0",
     "node-gzip": "^1.1.2",
-    "node-powershell": "^4.0.0"
+    "node-powershell": "^4.0.0",
+    "ws": "^7.4.1"
   }
 }

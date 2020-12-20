@@ -4,9 +4,10 @@ class WindowsInetBridge {
 	constructor() {
 		const namespace = 'INETOptions';
 		const baseNetAppPath = path.join(__dirname, '../../inetoptions/' + namespace + '/bin/Debug/netcoreapp2.0');
-		console.log(baseNetAppPath);
+
 		process.env.EDGE_USE_CORECLR = 1;
 		process.env.EDGE_APP_ROOT = baseNetAppPath;
+
 		const edge = require('electron-edge-js');
 
 		const baseDll = path.join(baseNetAppPath, namespace + '.dll');
