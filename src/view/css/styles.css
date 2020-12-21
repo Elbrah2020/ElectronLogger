@@ -10,3 +10,23 @@
   color: none;
   background: none;
 }
+
+#injectionTab {
+	max-width: 100%;
+}
+
+.injectionTextarea {
+	width: 100%;
+	margin-top: 14px;
+	resize: none;
+	height: 200px;
+}
+
+.injectionTextarea::selection {tzetz
+	color: white;
+	background: #212529;
+}
+
+.injectButtons {
+	margin-top: 5px;
+}

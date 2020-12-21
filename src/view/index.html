@@ -21,10 +21,13 @@
                <div class="collapse navbar-collapse">
                   <ul class="navbar-nav me-auto mb-lg-0">
                      <li class="nav-item active">
-                        <a class="nav-link" href="#">Connection</a>
+                        <a class="nav-link" href="#" id="connectionTabButton">Connection</a>
                      </li>
                      <li class="nav-item">
                         <a class="nav-link" href="#">Tools</a>
+                     </li>
+                     <li class="nav-item active">
+                        <a class="nav-link" href="#" id="injectionTabButton">Injection</a>
                      </li>
                   </ul>
                   <ul class="navbar-nav">
@@ -43,6 +46,13 @@
                   <button type="button" class="btn btn-danger hidden" id="stopLoggingButton">Stop logging</button>
                </p>
             </center>
+         </main>
+         <main class="container hidden" id="injectionTab">
+            <textarea class="form-control injectionTextarea"></textarea>
+            <div class="injectButtons">
+               <button type="button" class="btn btn-success" id="injectSendClientButton">Send to Client</button>&nbsp;
+               <button type="button" class="btn btn-success" id="injectSendServerButton">Send to Server</button>
+            </div>
          </main>
          <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">
             <div class="container-fluid">

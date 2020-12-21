@@ -55,6 +55,7 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 
 		this.wsServer.on('connection', async (ws, req) => {
 			let gameEndpoint = this.getGameEndpointByOrigin(req.headers.origin);
+			this.ws = ws;
 
 			ws.diffieHellman = {};
 			ws.crypto = {

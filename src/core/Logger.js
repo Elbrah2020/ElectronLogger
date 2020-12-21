@@ -6,6 +6,7 @@ const SslHandler = require('./SSL/SslHandler');
 const SslProxy = require('./SSL/SslProxy');
 const WebsocketServer = require('./WebSocket/WebsocketServer');
 const HeadersData = require('./Util/HeadersData');
+const HabboMessage = require('./Protocol/HabboMessage');
 
 class Logger extends EventEmitter {
 	async initialize() {
@@ -52,6 +53,32 @@ class Logger extends EventEmitter {
 		this.websocketServer.stop();
 		await this.windowsInetBridge.disableProxy();
 	}
+
+	sendToClient(packetData) {
+		for (var i = 0; i <= 13; i++) {
+			packetData = replaceAll('[' + i + ']', String.fromCharCode(i), packetData);
+		}
+
+		let packet = new HabboMessage(Buffer.from(packetData));
+		this.websocketServer.sendIncoming(this.websocketServer.ws, packet);
+	}
+
+	sendToServer(packetData) {
+		for (var i = 0; i <= 13; i++) {
+			packetData = replaceAll('[' + i + ']', String.fromCharCode(i), packetData);
+		}
+
+		let packet = new HabboMessage(Buffer.from(packetData));
+		this.websocketServer.sendOutgoing(this.websocketServer.ws, packet);
+	}
+}
+
+function replaceAll(find, replace, string) {
+	return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+function escapeRegExp(string) {
+	return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
 module.exports = Logger;
