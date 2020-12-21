@@ -5,13 +5,21 @@ const SslServer = require('./SSL/SslServer');
 const SslHandler = require('./SSL/SslHandler');
 const SslProxy = require('./SSL/SslProxy');
 const WebsocketServer = require('./WebSocket/WebsocketServer');
+const HeadersData = require('./Util/HeadersData');
 
 class Logger extends EventEmitter {
 	async initialize() {
 		if (!await CertificateManager.isCertTrusted('0AAA890390F92FC1562038CD97D993A6793E48A7')) {
 			await CertificateManager.installCertificate('./certs/selfsigned/ca.crt');
 		}
-		this.emit('ready');
+
+		this.headersData = new HeadersData();
+
+		try {
+			await this.headersData.loadHeaders();
+		} catch {
+		}
+
 		this.windowsInetBridge = new WindowsInetBridge();
 
 		this.sslServer = new SslServer();
@@ -19,12 +27,15 @@ class Logger extends EventEmitter {
 
 		await this.sslProxy.startServer(3334);
 		await this.sslServer.startServer(3335, SslHandler);
+
+		this.emit('ready');
 	}
 
 	async startLogging() {
 		await this.windowsInetBridge.setProxy('https=127.0.0.1:3334');
 
 		this.websocketServer = new WebsocketServer();
+		this.websocketServer.headersData = this.headersData;
 		this.websocketServer.startServer(3336);
 
 		this.websocketServer.on('connected', () => {

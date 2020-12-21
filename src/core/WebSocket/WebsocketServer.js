@@ -236,10 +236,11 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 
 		if (isOutgoing) {
 			console.log('Outgoing[' + packet.header + ']' + ' -> ' + packet.getMessageBody(true));
-			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header);
+
+			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header, this.headersData.outgoing[packet.header]);
 		} else {
 			console.log('Incoming[' + packet.header + ']' + ' -> ' + packet.getMessageBody(true));
-			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header);
+			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, this.headersData.incoming[packet.header]);
 		}
 
 		let buffer = packet.originalBuffer ? packet.originalBuffer : packet.get();
