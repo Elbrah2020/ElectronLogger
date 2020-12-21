@@ -55,20 +55,12 @@ class Logger extends EventEmitter {
 	}
 
 	sendToClient(packetData) {
-		for (var i = 0; i <= 13; i++) {
-			packetData = replaceAll('[' + i + ']', String.fromCharCode(i), packetData);
-		}
-
-		let packet = new HabboMessage(Buffer.from(packetData));
+		let packet = new HabboMessage(parsePacket(packetData));
 		this.websocketServer.sendIncoming(this.websocketServer.ws, packet);
 	}
 
 	sendToServer(packetData) {
-		for (var i = 0; i <= 13; i++) {
-			packetData = replaceAll('[' + i + ']', String.fromCharCode(i), packetData);
-		}
-
-		let packet = new HabboMessage(Buffer.from(packetData));
+		let packet = new HabboMessage(parsePacket(packetData));
 		this.websocketServer.sendOutgoing(this.websocketServer.ws, packet);
 	}
 }
@@ -79,6 +71,14 @@ function replaceAll(find, replace, string) {
 
 function escapeRegExp(string) {
 	return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
+function parsePacket(packet) {
+	for (var i = 0; i <= 13; i++) {
+		packet = replaceAll('[' + i + ']', String.fromCharCode(i), packet);
+	}
+
+	return Buffer.from(packet, 'binary');
 }
 
 module.exports = Logger;
