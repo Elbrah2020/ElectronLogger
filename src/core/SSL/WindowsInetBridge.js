@@ -1,48 +1,17 @@
+const execSync = require('child_process').execSync;
 const path = require('path');
 
 class WindowsInetBridge {
 	constructor() {
-		const namespace = 'INETOptions';
-		const baseNetAppPath = path.join(__dirname, '../../inetoptions/' + namespace + '/bin/Debug/netcoreapp2.0');
-
-		process.env.EDGE_USE_CORECLR = 1;
-		process.env.EDGE_APP_ROOT = baseNetAppPath;
-
-		const edge = require('electron-edge-js');
-
-		const baseDll = path.join(baseNetAppPath, namespace + '.dll');
-
-		this.setProxyBridge = edge.func({
-			assemblyFile: baseDll,
-			typeName: namespace + '.Binding',
-			methodName: 'SetProxy'
-		});
-
-		this.disableProxyBridge = edge.func({
-			assemblyFile: baseDll,
-			typeName: namespace + '.Binding',
-			methodName: 'DisableProxy'
-		});
+		this.binPath = path.join(__dirname, '../../InetOptionsCLI/InetOptionsCLI/bin/Debug/InetOptionsCLI.exe');
 	}
 
-	async setProxy(proxyAddress) {
-		return new Promise((resolve, reject) => {
-			this.setProxyBridge(proxyAddress, (error, result) => {
-				if (error)
-					reject(error);
-				resolve(result);
-			});
-		});
+	setProxy(proxyAddress) {
+		execSync(this.binPath + ' ' + proxyAddress);
 	}
 
-	async disableProxy() {
-		return new Promise((resolve, reject) => {
-			this.disableProxyBridge('x', (error, result) => {
-				if (error)
-					reject(error);
-				resolve(result);
-			});
-		});
+	disableProxy() {
+		execSync(this.binPath);
 	}
 }
 

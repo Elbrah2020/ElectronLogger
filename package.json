@@ -21,7 +21,6 @@
   "dependencies": {
     "buffer-reverse": "^1.0.1",
     "electron": "^5.0.3",
-    "electron-edge-js": "^12.4.0",
     "get-port": "^5.1.1",
     "http-proxy": "^1.18.1",
     "http-string-parser": "0.0.6",
