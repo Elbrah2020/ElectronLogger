@@ -54,6 +54,16 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 
 				res.end(body);
 			}
+
+			if (req.injectVersionText) {
+				body = body.toString().split(' ')[0] + ' - Powered by ElectronLogger ª';
+
+				res.setHeader('access-control-allow-headers', 'Accept, Content-Type, Origin, X-Requested-With, Pragma, X-App-Key, Cache-Control');
+				res.setHeader('access-control-allow-methods', 'POST, GET, OPTIONS');
+				res.setHeader('access-control-allow-origin', '*');
+				res.setHeader('access-control-expose-headers', 'ETag');
+				res.end(body);
+			}
 		});
 	}
 });
@@ -73,6 +83,13 @@ module.exports = (req, res) => {
 		proxyOptions.target = 'https://jxz.be';
 		proxyOptions.selfHandleResponse = true;
 		req.parseChunk = true;
+	}
+
+	if (req.url.endsWith('/WebGL/habbo2020-global-prod/StreamingAssets/Cracked.txt')) {
+		req.url = req.url.replace('Cracked.txt', 'Version.txt');
+		proxyOptions.selfHandleResponse = true;
+		req.parseChunk = true;
+		req.injectVersionText = true;
 	}
 
 	proxy.web(req, res, proxyOptions);
