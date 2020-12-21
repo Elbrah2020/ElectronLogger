@@ -220,6 +220,9 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 			case 'https://www.habbo.com.tr':
 				return 'wss://game-tr.habbo.com:30001/websocket';
 			break;
+			case 'https://www.habbo.fi':
+				return 'wss://game-fi.habbo.com:30001/websocket';
+			break;
 		}
 	}
 
