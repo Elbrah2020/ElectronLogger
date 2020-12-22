@@ -11,6 +11,7 @@ const reverse = require('buffer-reverse');
 const EventEmitter = require('events');
 const getPort = require('get-port');
 const WebSocket = require('ws');
+const path = require('path');
 const tls = require('tls');
 const net = require('net');
 const fs = require('fs');
@@ -33,15 +34,15 @@ class WebsocketServer extends EventEmitter {
 		this.packetloggerWindow.loadURL(`file://${__dirname}/../../view/logger.html`);
 
 		const sslServerOptions = {
-			key: fs.readFileSync('./certs/habbo/game.habbo.com.key'),
-			cert: fs.readFileSync('./certs/habbo/game.habbo.com.crt'),
+			key: fs.readFileSync(path.join(__dirname, '../../../certs/habbo/game.habbo.com.key')),
+			cert: fs.readFileSync(path.join(__dirname, '../../../certs/habbo/game.habbo.com.crt')),
 			requestCert: false,
 			ca: []
 		};
 
 		const sslClientOptions = {
-			key: fs.readFileSync('./certs/habbo/habboclient.key'),
-			cert: fs.readFileSync('./certs/habbo/habboclient.crt'),
+			key: fs.readFileSync(path.join(__dirname, '../../../certs/habbo/habboclient.key')),
+			cert: fs.readFileSync(path.join(__dirname, '../../../certs/habbo/habboclient.crt')),
 			ca: []
 		};
 

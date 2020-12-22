@@ -1,12 +1,13 @@
 const https = require('https');
+const path = require('path');
 const fs = require('fs');
 
 class SslServer {
 	constructor() {
 		this.options = {
-			key: fs.readFileSync('./certs/selfsigned/habbo.key'),
-		  cert: fs.readFileSync('./certs/selfsigned/habbo.crt'),
-		  ca: fs.readFileSync('./certs/selfsigned/ca.crt')
+			key: fs.readFileSync(path.join(__dirname, '../../../certs/selfsigned/habbo.key')),
+		  cert: fs.readFileSync(path.join(__dirname, '../../../certs/selfsigned/habbo.crt')),
+		  ca: fs.readFileSync(path.join(__dirname, '../../../certs/selfsigned/ca.crt'))
 		}
 	}
 

@@ -1,3 +1,4 @@
+const path = require('path');
 const EventEmitter = require('events');
 const CertificateManager = require('./SSL/CertificateManager');
 const WindowsInetBridge = require('./SSL/WindowsInetBridge');
@@ -11,7 +12,7 @@ const HabboMessage = require('./Protocol/HabboMessage');
 class Logger extends EventEmitter {
 	async initialize() {
 		if (!await CertificateManager.isCertTrusted('0AAA890390F92FC1562038CD97D993A6793E48A7')) {
-			await CertificateManager.installCertificate('./certs/selfsigned/ca.crt');
+			await CertificateManager.installCertificate(path.join(__dirname, '../../certs/selfsigned/ca.crt'));
 		}
 
 		this.headersData = new HeadersData();
