@@ -8,6 +8,7 @@ const SslProxy = require('./SSL/SslProxy');
 const WebsocketServer = require('./WebSocket/WebsocketServer');
 const HeadersData = require('./Util/HeadersData');
 const HabboMessage = require('./Protocol/HabboMessage');
+const Util = require('./Util/Util');
 
 class Logger extends EventEmitter {
 	async initialize() {
@@ -30,6 +31,7 @@ class Logger extends EventEmitter {
 		await this.sslProxy.startServer(3334);
 		await this.sslServer.startServer(3335, SslHandler);
 
+		this.loggingEnabled = false;
 		this.emit('ready');
 	}
 
@@ -44,6 +46,7 @@ class Logger extends EventEmitter {
 			this.emit('connected');
 		});
 
+		this.loggingEnabled = true;
 		return true;
 	}
 
@@ -53,33 +56,36 @@ class Logger extends EventEmitter {
 		}
 		this.websocketServer.stop();
 		await this.windowsInetBridge.disableProxy();
+
+		this.loggingEnabled = false;
+		return true;
 	}
 
 	sendToClient(packetData) {
-		let packet = new HabboMessage(parsePacket(packetData));
-		this.websocketServer.sendIncoming(this.websocketServer.ws, packet);
+		if (this.loggingEnabled && this.websocketServer.ws) {
+			let packet = new HabboMessage(this.parsePacket(packetData));
+			this.websocketServer.sendIncoming(this.websocketServer.ws, packet);
+		} else {
+			alert('Please connect before sending data.');
+		}
 	}
 
 	sendToServer(packetData) {
-		let packet = new HabboMessage(parsePacket(packetData));
-		this.websocketServer.sendOutgoing(this.websocketServer.ws, packet);
-	}
-}
-
-function replaceAll(find, replace, string) {
-	return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-}
-
-function escapeRegExp(string) {
-	return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
-
-function parsePacket(packet) {
-	for (var i = 0; i <= 13; i++) {
-		packet = replaceAll('[' + i + ']', String.fromCharCode(i), packet);
+		if (this.loggingEnabled && this.websocketServer.ws) {
+			let packet = new HabboMessage(this.parsePacket(packetData));
+			this.websocketServer.sendOutgoing(this.websocketServer.ws, packet);
+		} else {
+			alert('Please connect before sending data.');
+		}
 	}
 
-	return Buffer.from(packet, 'binary');
+	parsePacket(packet) {
+		for (var i = 0; i <= 13; i++) {
+			packet = Util.replaceAll('[' + i + ']', String.fromCharCode(i), packet);
+		}
+
+		return Buffer.from(packet, 'binary');
+	}
 }
 
 module.exports = Logger;

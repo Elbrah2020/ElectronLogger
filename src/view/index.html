@@ -50,8 +50,31 @@
          <main class="container hidden" id="injectionTab">
             <textarea class="form-control injectionTextarea"></textarea>
             <div class="injectButtons">
-               <button type="button" class="btn btn-success" id="injectSendClientButton">Send to Client</button>&nbsp;
-               <button type="button" class="btn btn-success" id="injectSendServerButton">Send to Server</button>
+               <table>
+                  <tr>
+                     <td>
+                        <button type="button" class="btn btn-success" id="injectSendClientButton" disabled>Send to Client</button>
+                     </td>
+                     <td>
+                        <button type="button" class="btn btn-success" id="injectSendServerButton" disabled>Send to Server</button>
+                     </td>
+                     <td class="injectInputLengthContainer">
+                        <div class="input-group has-validation">
+                           <span class="input-group-text" class="injectInputLengthSpan">Length</span>
+                           <input type="text" id="injectLengthInput" class="form-control" value="0" disabled>
+                        </div>
+                     </td>
+                     <td class="injectInputHeaderContainer">
+                        <div class="input-group has-validation">
+                           <span class="input-group-text" class="injectInputHeaderSpan">Header</span>
+                           <input type="text" id="injectHeaderInput" class="form-control" value="0" disabled>
+                        </div>
+                     </td>
+                     <td>
+                        <button type="button" class="btn btn-danger" id="packetCorruptedButton">✗</button>
+                     </td>
+                  </tr>
+               </table>
             </div>
          </main>
          <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">

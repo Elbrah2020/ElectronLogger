@@ -44,6 +44,23 @@ window.onload = () => {
 		logger.sendToServer(packetData);
 	});
 
+	$('.injectionTextarea').bind('input propertychange', function() {
+		let buffer = logger.parsePacket(this.value);
+
+		if (buffer.length >= 6) {
+			let packetLength = buffer.readInt32BE(0);
+			let packetHeader = buffer.readInt16BE(4);
+
+			if (buffer.length - 4 == packetLength) {
+				setInjectionState(false, packetLength, packetHeader);
+			} else {
+				setInjectionState(true, packetLength, packetHeader);
+			}
+		} else {
+			setInjectionState(true, 0, 0);
+		}
+	});
+
 	(async () => {
 		logger.on('ready', () => {
 			setStatusLabel('secondary', 'Ready');
@@ -78,4 +95,31 @@ function loadTab(tabElement) {
 	$('#' + selectedTab).addClass('hidden');
 	$('#' + tabElement).removeClass('hidden');
 	selectedTab = tabElement;
+}
+
+function setInjectionState(isCorrupted, length, header) {
+	let corruptedButton = $('#packetCorruptedButton');
+
+	if (isCorrupted) {
+		if (!corruptedButton.hasClass('btn-danger')) {
+			corruptedButton.removeClass('btn-success');
+			corruptedButton.addClass('btn-danger');
+			corruptedButton.text('✗');
+		}
+
+		$('#injectSendClientButton').prop("disabled", true);
+		$('#injectSendServerButton').prop("disabled", true);
+	} else {
+		if (!corruptedButton.hasClass('btn-success')) {
+			corruptedButton.removeClass('btn-danger');
+			corruptedButton.addClass('btn-success');
+			corruptedButton.text('✓');
+		}
+
+		$('#injectSendClientButton').prop("disabled", false);
+		$('#injectSendServerButton').prop("disabled", false);
+	}
+
+	$('#injectLengthInput').val(length);
+	$('#injectHeaderInput').val(header);
 }

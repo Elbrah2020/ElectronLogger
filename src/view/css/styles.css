@@ -7,8 +7,8 @@
 }
 
 ::selection {
-  color: none;
-  background: none;
+	color: none;
+	background: none;
 }
 
 #injectionTab {
@@ -22,11 +22,31 @@
 	height: 200px;
 }
 
-.injectionTextarea::selection {tzetz
+.injectionTextarea::selection {
 	color: white;
 	background: #212529;
 }
 
 .injectButtons {
 	margin-top: 5px;
+}
+
+#packetCorruptedButton {
+	width: 38px;
+}
+
+.injectInputLengthContainer {
+	width: 136px;
+}
+
+.injectInputHeaderContainer {
+	width: 135px;
+}
+
+.injectInputLengthSpan {
+	padding: 0.375rem .68rem;
+}
+
+.injectInputHeaderSpan {
+	padding: 0.375rem .6rem;
 }
