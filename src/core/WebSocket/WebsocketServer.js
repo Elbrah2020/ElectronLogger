@@ -82,7 +82,6 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 			ws.clientWebsocket.on('message', data => {
 				if (data == 'OK') {
 					ws.tlsClientClearStream = tls.connect(ws.tlsClientGateway.address().port, sslClientOptions, () => {
-						console.log('SERVER CONNECTED');
 					});
 
 					ws.tlsClientClearStream.on('data', buffer => {
@@ -218,11 +217,35 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 
 	getGameEndpointByOrigin(origin) {
 		switch(origin) {
+			case 'https://www.habbo.com':
+				return 'wss://game-us.habbo.com:30001/websocket';
+			break;
+			case 'https://www.habbo.com.br':
+				return 'wss://game-br.habbo.com:30001/websocket';
+			break;
 			case 'https://www.habbo.com.tr':
 				return 'wss://game-tr.habbo.com:30001/websocket';
 			break;
+			case 'https://www.habbo.de':
+				return 'wss://game-de.habbo.com:30001/websocket';
+			break;
+			case 'https://www.habbo.es':
+				return 'wss://game-es.habbo.com:30001/websocket';
+			break;
 			case 'https://www.habbo.fi':
 				return 'wss://game-fi.habbo.com:30001/websocket';
+			break;
+			case 'https://www.habbo.fr':
+				return 'wss://game-fr.habbo.com:30001/websocket';
+			break;
+			case 'https://www.habbo.it':
+				return 'wss://game-it.habbo.com:30001/websocket';
+			break;
+			case 'https://www.habbo.nl':
+				return 'wss://game-nl.habbo.com:30001/websocket';
+			break;
+			case 'https://sandbox.habbo.com':
+				return 'wss://game-s2.habbo.com:30001/websocket';
 			break;
 		}
 	}
@@ -239,11 +262,8 @@ serverRSA.setPublic('BD214E4F036D35B75FEE36000F24EBBEF15D56614756D7AFBD4D186EF54
 		let target = isOutgoing ? ws.tlsClientClearStream : ws.tlsServerClearStream;
 
 		if (isOutgoing) {
-			console.log('Outgoing[' + packet.header + ']' + ' -> ' + packet.getMessageBody(true));
-
 			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header, this.headersData.outgoing[packet.header]);
 		} else {
-			console.log('Incoming[' + packet.header + ']' + ' -> ' + packet.getMessageBody(true));
 			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, this.headersData.incoming[packet.header]);
 		}
 
