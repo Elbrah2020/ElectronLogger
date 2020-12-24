@@ -80,6 +80,7 @@ module.exports = (req, res) => {
 
 	if (req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.data.unityweb?')) {
 		req.headers.host = 'jxz.be';
+		req.headers.from = 'ElectronLogger';
 		proxyOptions.target = 'https://jxz.be';
 		proxyOptions.selfHandleResponse = true;
 		req.parseChunk = true;
