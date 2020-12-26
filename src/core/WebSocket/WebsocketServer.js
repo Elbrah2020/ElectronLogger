@@ -268,7 +268,7 @@ class WebsocketServer extends EventEmitter {
 			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, this.headersData.incoming[packet.header]);
 		}
 
-		let buffer = packet.originalBuffer ? packet.originalBuffer : packet.get();
+		let buffer = packet.get();
 
 		if (isOutgoing && ws.crypto.server.outgoingChaCha) {
 			let headerBytes = reverse(buffer.slice(4, 6));

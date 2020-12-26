@@ -2,7 +2,7 @@ class HabboMessageBuilder {
 	constructor(header) {
 		this.header = header;
 		this.buffer = Buffer.alloc(2);
-		this.buffer.writeUInt16BE(header, 0);
+		this.buffer.writeInt16BE(header, 0);
 	}
 
 	appendRawBytes(buffer) {
@@ -12,13 +12,14 @@ class HabboMessageBuilder {
 	appendString(str) {
     let stringBuffer = Buffer.from(str);
     let lengthBuffer = Buffer.alloc(2);
-    lengthBuffer.writeUInt16BE(stringBuffer.length, 0);
+    lengthBuffer.writeInt16BE(stringBuffer.length, 0);
 
     this.buffer = Buffer.concat([this.buffer, lengthBuffer, stringBuffer]);
   }
 
 	appendChar(char) {
-		let buffer = Buffer.alloc(String.fromCharCode(char));
+		let buffer = Buffer.alloc(1);
+		buffer[0] = char;
 
 		this.buffer = Buffer.concat([this.buffer, buffer]);
 	}
@@ -30,16 +31,26 @@ class HabboMessageBuilder {
 		this.buffer = Buffer.concat([this.buffer, buffer]);
 	}
 
+	appendLong(value) {
+		if (typeof value !== 'bigint')
+			throw 'Input value have to be a bigint.';
+
+		let buffer = Buffer.alloc(8);
+		buffer.writeBigInt64BE(value, 0);
+
+		this.buffer = Buffer.concat([this.buffer, buffer]);
+	}
+
 	appendShort(value) {
 		let buffer = Buffer.alloc(2);
-		buffer.writeUInt16BE(value, 0);
+		buffer.writeInt16BE(value, 0);
 
 		this.buffer = Buffer.concat([this.buffer, buffer]);
 	}
 
 	appendBoolean(value) {
 		let buffer = Buffer.alloc(1);
-		buffer.write(String.fromCharCode(value ? 1 : 0), 0);
+		buffer[0] = value;
 
 		this.buffer = Buffer.concat([this.buffer, buffer]);
 	}
@@ -64,7 +75,7 @@ class HabboMessageBuilder {
 
 	get() {
 		let buffer = Buffer.alloc(4);
-		buffer.writeUInt32BE(this.buffer.length, 0);
+		buffer.writeInt32BE(this.buffer.length, 0);
 
 		return Buffer.concat([buffer, this.buffer]);
 	}

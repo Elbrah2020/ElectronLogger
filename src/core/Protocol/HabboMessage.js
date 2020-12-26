@@ -1,8 +1,7 @@
 class HabboMessage {
 	constructor(buffer) {
+		this.position = 0;
 		this.buffer = buffer;
-		this.originalBuffer = Buffer.alloc(this.buffer.length);
-		this.buffer.copy(this.originalBuffer);
 		this.length = this.readInt();
 		this.header = this.readShort();
 	}
@@ -15,64 +14,56 @@ class HabboMessage {
 		this.outgoing = true;
 	}
 
-	readInt() {
-		try {
-			let int = this.buffer.readUInt32BE(0);
-			this.buffer = this.buffer.slice(4);
+	readLong() {
+		let long = this.buffer.readBigInt64BE(this.position);
+		this.position += 8;
 
-			return int;
-		} catch (e) {
-		}
-		return -1;
+		return long;
+	}
+
+	readInt() {
+		let int = this.buffer.readInt32BE(this.position);
+		this.position += 4;
+
+		return int;
 	}
 
 	readShort() {
-		try {
-			let short = this.buffer.readUInt16BE(0);
-			this.buffer = this.buffer.slice(2);
+		let short = this.buffer.readInt16BE(this.position);
+		this.position += 2;
 
-			return short;
-		} catch (e) {
-		}
-
-		return -1;
+		return short;
 	}
 
 	readString() {
-		try {
-			let length = this.readShort();
-			let str = this.buffer.slice(0, length).toString();
-			this.buffer = this.buffer.slice(length);
+		let length = this.readShort();
 
-			return str;
-		} catch (e) {
-		}
+		let str = this.buffer.slice(this.position, this.position + length).toString();
+		this.position += length;
 
-		return null;
+		return str;
 	}
 
 	readBuffer(length) {
-		try {
-			let readedBuffer = this.buffer.slice(0, length);
-			this.buffer = this.buffer.slice(length);
+		let readedBuffer = this.buffer.slice(this.position, this.position + length);
+		this.position += length;
 
-			return readedBuffer;
-		} catch (e) {
-		}
-
-		return null;
+		return readedBuffer;
 	}
 
 	readBool() {
-		try {
-			let bool = this.buffer[0] == 1;
-			this.buffer = this.buffer.slice(1);
+		if (this.position == this.buffer.length - 1)
+			throw 'Not enough bytes';
 
-			return bool;
-		} catch (e) {
-		}
 
-		return false;
+		let bool = this.buffer[0] == 1;
+		this.position += 1;
+
+		return bool;
+	}
+
+	get() {
+		return this.buffer;
 	}
 
 	getHeader() {
@@ -82,11 +73,11 @@ class HabboMessage {
 	getMessageBody(fullPacket) {
 		let result = "";
 
-		for (let i = fullPacket ? 0 : 6; i < this.originalBuffer.length; i++) {
-			if (this.originalBuffer[i] <= 13) {
-				result += "[" + this.originalBuffer[i] + "]";
+		for (let i = fullPacket ? 0 : 6; i < this.buffer.length; i++) {
+			if (this.buffer[i] <= 13) {
+				result += "[" + this.buffer[i] + "]";
 			} else {
-				result += String.fromCharCode(this.originalBuffer[i]);
+				result += String.fromCharCode(this.buffer[i]);
 			}
 		}
 
