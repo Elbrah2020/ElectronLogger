@@ -1,4 +1,4 @@
-const execSync = require('child_process').execSync;
+const execFileSync = require('child_process').execFileSync;
 const path = require('path');
 const fs = require('fs');
 
@@ -13,11 +13,11 @@ class WindowsInetBridge {
 	}
 
 	setProxy(proxyAddress) {
-		execSync(this.binPath + ' ' + proxyAddress);
+		execFileSync(this.binPath, [ proxyAddress ]);
 	}
 
 	disableProxy() {
-		execSync(this.binPath);
+		execFileSync(this.binPath);
 	}
 }
 

@@ -1,4 +1,5 @@
 const electron = require('electron');
+const path = require('path');
 
 // Module to control application life.
 const app = electron.app;
@@ -20,7 +21,8 @@ function createWindow () {
     webPreferences:{
       nodeIntegration: true,
       nodeIntegrationInWorker: true
-    }
+    },
+    icon: path.join(__dirname, 'icon.png')
   });
 
   //mainWindow.setMenu(null);
