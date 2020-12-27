@@ -1,13 +1,21 @@
 const Logger = require('../../core/Logger');
 const { shell } = require('electron');
+const path = require('path');
+const package = require(path.join(__dirname, '../../../package.json'));
 
 var logger = new Logger();
 
 var selectedTab = 'connectionTab';
 
 window.onload = () => {
+	$('#appVersion').text('v' + package.version);
+
 	$('#externalGithubButton').click(() => {
 		shell.openExternal('https://github.com/Elbrah2020/ElectronLogger');
+	});
+
+	$('#externalDiscordButton').click(() => {
+		shell.openExternal('https://discord.gg/vGPVKtb5vT');
 	});
 
 	$('#startLoggingButton').click(async () => {
