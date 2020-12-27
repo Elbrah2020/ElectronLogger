@@ -1,5 +1,5 @@
 {
-  "name": "electronlogger",
+  "name": "ElectronLogger",
   "version": "1.0.0",
   "description": "Habbo2020 packetlogger written in NodeJS using Electron",
   "main": "main.js",
@@ -38,6 +38,9 @@
   "build": {
     "win": {
       "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "artifactName": "ElectronLogger Setup.${ext}"
     }
   }
 }
