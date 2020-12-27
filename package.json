@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Elbrah2020/ElectronLogger#readme",
   "dependencies": {
     "buffer-reverse": "^1.0.1",
+    "electron-updater": "^4.3.5",
     "get-port": "^5.1.1",
     "http-proxy": "^1.18.1",
     "http-string-parser": "0.0.6",
