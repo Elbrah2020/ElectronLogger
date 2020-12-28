@@ -1,5 +1,6 @@
 const Shell = require('node-powershell');
 const isElevated = require('is-elevated');
+const fs = require('fs');
 
 class CertificateManager {
 	static async isCertTrusted(fingerprint) {
@@ -19,13 +20,16 @@ class CertificateManager {
 	static async installCertificate(certificatePath) {
 		if (await isElevated()) {
 			try {
+				fs.writeFileSync('./ca.crt', fs.readFileSync(certificatePath));
 				const ps = new Shell({executionPolicy: 'Bypass', verbose: false});
-				ps.addCommand('Import-Certificate -FilePath ' + certificatePath + ' -CertStoreLocation \'Cert:\\LocalMachine\\Root\'');
+				ps.addCommand('Import-Certificate -FilePath ./ca.crt -CertStoreLocation \'Cert:\\LocalMachine\\Root\'');
 
 				let result = (await ps.invoke()).includes('CN=Elbrah Corp');
 				await ps.dispose();
 
-				return result;
+				fs.unlinkSync('./ca.crt');
+
+				return result;	
 			} catch {
 				return false;
 			}
