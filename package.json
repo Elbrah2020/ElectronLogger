@@ -1,6 +1,6 @@
 {
   "name": "ElectronLogger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Habbo2020 packetlogger written in NodeJS using Electron",
   "main": "main.js",
   "scripts": {
