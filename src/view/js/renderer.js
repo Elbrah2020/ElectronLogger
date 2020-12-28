@@ -1,5 +1,5 @@
 const Logger = require('../../core/Logger');
-const { shell } = require('electron');
+const { shell, ipcRenderer } = require('electron');
 const path = require('path');
 const package = require(path.join(__dirname, '../../../package.json'));
 
@@ -8,6 +8,28 @@ var logger = new Logger();
 var selectedTab = 'connectionTab';
 
 window.onload = () => {
+	ipcRenderer.send('check_update');
+
+	ipcRenderer.on('checking_for_update', () => {
+		setUpdateStatus('primary', 'Checking for update..');
+	});
+
+	ipcRenderer.on('update_available', () => {
+		setUpdateStatus('primary', 'Downloading update..');
+	});
+
+	ipcRenderer.on('update_not_available', () => {
+		$('#packetLoggerUpdateState').addClass('hidden');
+	});
+
+	ipcRenderer.on('update_downloaded', () => {
+		setUpdateStatus('success', 'Update downloaded, please restart me !');
+	});
+
+	ipcRenderer.on('error', () => {
+		setUpdateStatus('danger', 'Error raised during auto-update');
+	});
+
 	$('#appVersion').text('v' + package.version);
 
 	$('#externalGithubButton').click(() => {
@@ -22,14 +44,14 @@ window.onload = () => {
 		await logger.startLogging();
 		$('#startLoggingButton').addClass('hidden');
 		$('#stopLoggingButton').removeClass('hidden');
-		setStatusLabel('primary', 'Waiting for connection..');
+		setLoggerStatus('primary', 'Waiting for connection..');
 	});
 
 	$('#stopLoggingButton').click(async () => {
 		await logger.stopLogging();
 		$('#stopLoggingButton').addClass('hidden');
 		$('#startLoggingButton').removeClass('hidden');
-		setStatusLabel('secondary', 'Ready');
+		setLoggerStatus('secondary', 'Ready');
 	});
 
 	$('#connectionTabButton').click(() => {
@@ -71,7 +93,7 @@ window.onload = () => {
 
 	(async () => {
 		logger.on('ready', () => {
-			setStatusLabel('secondary', 'Ready');
+			setLoggerStatus('secondary', 'Ready');
 
 			$('#loadingInterface').fadeOut('slow', () => {
 				$('#packetloggerInterface').fadeIn('slow');
@@ -79,14 +101,14 @@ window.onload = () => {
 		});
 
 		logger.on('connected', () => {
-			setStatusLabel('success', 'Connected');
+			setLoggerStatus('success', 'Connected');
 		});
 
 		await logger.initialize();
 	})();
 }
 
-function setStatusLabel(level, message) {
+function setLoggerStatus(level, message) {
 	let statusLabel = $('#packetLoggerFooterState');
 
 	let actualLevel = statusLabel.attr("class").split(/\s+/).find(className => className.startsWith('bg-'));
@@ -95,6 +117,16 @@ function setStatusLabel(level, message) {
 	statusLabel.text(message);
 
 	document.title = "ElectronLogger - " + message;
+}
+
+function setUpdateStatus(level, message) {
+	let statusLabel = $('#packetLoggerUpdateState');
+
+	let actualLevel = statusLabel.attr("class").split(/\s+/).find(className => className.startsWith('bg-'));
+	statusLabel.removeClass('hidden');
+	statusLabel.removeClass(actualLevel);
+	statusLabel.addClass('bg-' + level);
+	statusLabel.text(message);
 }
 
 function loadTab(tabElement) {

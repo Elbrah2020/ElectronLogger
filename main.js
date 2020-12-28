@@ -3,6 +3,8 @@ const { autoUpdater } = require('electron-updater');
 const electron = require('electron');
 const path = require('path');
 
+const WindowsInetBridge = require('./src/core/SSL/WindowsInetBridge');
+
 let mainWindow;
 
 function createWindow () {
@@ -11,7 +13,6 @@ function createWindow () {
 		height: 400,
 		resizable: false,
 		alwaysOnTop: false,
-		show: false,
 		webPreferences:{
 			nodeIntegration: true,
 			nodeIntegrationInWorker: true,
@@ -29,11 +30,10 @@ function createWindow () {
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;
-	});
-
-	mainWindow.once('ready-to-show', () => {
-		mainWindow.show();
-		autoUpdater.checkForUpdatesAndNotify();
+		
+		let windowsInetBridge = new WindowsInetBridge();
+		windowsInetBridge.disableProxy();
+		process.exit(0);
 	});
 }
 
@@ -51,18 +51,30 @@ app.on('activate', () => {
 	}
 });
 
+ipcMain.on('check_update', () => {
+	autoUpdater.checkForUpdatesAndNotify();
+});
+
 ipcMain.on('update_app', () => {
 	autoUpdater.quitAndInstall();
 });
 
 autoUpdater.on('update-available', () => {
-	console.log('update available');
+	mainWindow.webContents.send('update_available');
+});
+
+autoUpdater.on('update-not-available', () => {
+	mainWindow.webContents.send('update_not_available');
 });
 
 autoUpdater.on('checking-for-update', () => {
-	console.log('checking for update');
+	mainWindow.webContents.send('checking_for_update');
+});
+
+autoUpdater.on('update-downloaded', () => {
+	mainWindow.webContents.send('update_downloaded');
 });
 
 autoUpdater.on('error', error => {
-	console.error('ERROR', error);
+	mainWindow.webContents.send('update_error', error);
 });
