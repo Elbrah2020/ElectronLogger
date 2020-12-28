@@ -213,6 +213,14 @@ class WebsocketServer extends EventEmitter {
 					ws.tlsServerGateway.write(websocketInputData);
 				}
 			});
+
+			ws.on('close', () => {
+				this.emit('disconnected');
+			});
+
+			ws.clientWebsocket.on('close', () => {
+				this.emit('disconnected');
+			});
 		});
 	}
 

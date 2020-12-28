@@ -104,6 +104,12 @@ window.onload = () => {
 			setLoggerStatus('success', 'Connected');
 		});
 
+		logger.on('disconnected', () => {
+			setLoggerStatus('danger', 'Disconnected');
+			$('#stopLoggingButton').addClass('hidden');
+			$('#startLoggingButton').removeClass('hidden');
+		});
+
 		await logger.initialize();
 	})();
 }
