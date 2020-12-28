@@ -38,7 +38,7 @@ class Logger extends EventEmitter {
 	async startLogging() {
 		this.windowsInetBridge.setProxy('https=127.0.0.1:3334');
 
-		this.websocketServer = new WebsocketServer(this);
+		this.websocketServer = new WebsocketServer();
 		this.websocketServer.headersData = this.headersData;
 		this.websocketServer.startServer(3336);
 

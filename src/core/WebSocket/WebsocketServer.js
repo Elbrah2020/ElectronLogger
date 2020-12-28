@@ -6,7 +6,7 @@ const HabboMessage = require('../Protocol/HabboMessage');
 const ChaCha20 = require('../Crypto/JSChaCha20');
 const RSA = require('../Crypto/RSA');
 
-const BrowserWindow = require('electron').remote.BrowserWindow;
+const { BrowserWindow, Menu, MenuItem } = require('electron').remote;
 const reverse = require('buffer-reverse');
 const EventEmitter = require('events');
 const getPort = require('get-port');
@@ -29,7 +29,7 @@ class WebsocketServer extends EventEmitter {
 			}
 		});
 
-		this.packetloggerWindow.setMenu(null);
+		this.setupWindowMenu();
 
 		this.packetloggerWindow.loadURL(`file://${__dirname}/../../view/logger.html`);
 
@@ -346,6 +346,68 @@ class WebsocketServer extends EventEmitter {
 
 	async stop() {
 		return await this.wsServer.close();
+	}
+
+	setupWindowMenu() {
+		const menu = new Menu();
+
+		const displayIncomingMenuItem = new MenuItem({
+			label: 'Display incoming',
+			type: 'checkbox',
+			accelerator: 'Ctrl+I',
+			checked: true,
+			click: () => {
+				this.packetloggerWindow.webContents.send('triggerIncomingLogging');
+			}
+		});
+
+		const displayOutgoingMenuItem = new MenuItem({
+			label: 'Display outgoing',
+			type: 'checkbox',
+			accelerator: 'Ctrl+O',
+			checked: true,
+			click: () => {
+				this.packetloggerWindow.webContents.send('triggerOutgoingLogging');
+			}
+		});
+
+		const triggerAutoscrollMenuItem = new MenuItem({
+			label: 'Auto scrolling',
+			type: 'checkbox',
+			accelerator: 'Ctrl+S',
+			checked: true,
+			click: () => {
+				this.packetloggerWindow.webContents.send('triggerAutoscroll');
+			}
+		});
+
+		const triggerAlwaysOnTopMenuItem = new MenuItem({
+			label: 'Always on top',
+			type: 'checkbox',
+			accelerator: 'Ctrl+T',
+			checked: false,
+			click: () => {
+				this.packetloggerWindow.setAlwaysOnTop(!this.packetloggerWindow.isAlwaysOnTop());
+			}
+		});
+
+		menu.append(new MenuItem({
+			label: 'File',
+			submenu: [{
+				label: 'Clear log',
+				accelerator: 'Ctrl+E',
+				click: () => {
+					this.packetloggerWindow.webContents.send('clearLogs');
+				}
+			}]
+		}));
+
+		menu.append(new MenuItem({
+			label: 'Display',
+			submenu: [ displayIncomingMenuItem, displayOutgoingMenuItem, triggerAutoscrollMenuItem, triggerAlwaysOnTopMenuItem ]
+		}));
+
+		this.packetloggerWindow.setMenu(menu);
 	}
 }
 
