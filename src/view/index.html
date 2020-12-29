@@ -20,14 +20,23 @@
                <a class="navbar-brand" href="#">ElectronLogger</a>
                <div class="collapse navbar-collapse">
                   <ul class="navbar-nav me-auto mb-lg-0">
-                     <li class="nav-item active">
+                     <li class="nav-item">
                         <a class="nav-link" href="#" id="connectionTabButton">Connection</a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="#">Tools</a>
+                        <a class="nav-link disabled" href="#">Tools</a>
                      </li>
-                     <li class="nav-item active">
-                        <a class="nav-link" href="#" id="injectionTabButton">Injection</a>
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownInjection" data-bs-toggle="dropdown" aria-expanded="false">Injection</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownInjection">
+                           <li><a class="dropdown-item" href="#" id="classicInjectionTabButton">Classic mode</a></li>
+                           <li><a class="dropdown-item disabled" href="#">Expert mode</a></li>
+                           <li><a class="dropdown-item disabled" href="#">Timer mode</a></li>
+                           <li><a class="dropdown-item disabled" href="#">Filters</a></li>
+                        </ul>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Script</a>
                      </li>
                   </ul>
                   <ul class="navbar-nav">
@@ -47,7 +56,7 @@
                </p>
             </center>
          </main>
-         <main class="container hidden" id="injectionTab">
+         <main class="container hidden" id="classicInjectionTab">
             <textarea class="form-control injectionTextarea"></textarea>
             <div class="injectButtons">
                <table>
@@ -93,6 +102,9 @@
                      </li>
                   </ul>
                   <ul class="navbar-nav">
+                     <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                     </li>
                      <li class="nav-item">
                         <a class="nav-link" href="#" id="externalDiscordButton">Discord</a>
                      </li>

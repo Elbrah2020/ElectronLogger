@@ -58,8 +58,8 @@ window.onload = () => {
 		loadTab('connectionTab');
 	});
 
-	$('#injectionTabButton').click(() => {
-		loadTab('injectionTab');
+	$('#classicInjectionTabButton').click(() => {
+		loadTab('classicInjectionTab');
 	});
 
 	$('#injectSendClientButton').click(() => {
