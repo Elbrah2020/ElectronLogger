@@ -46,7 +46,7 @@ class Logger extends EventEmitter {
 		this.websocketServer.startServer(3336);
 
 		this.websocketServer.on('connected', () => {
-			this.windowsInetBridge.disableProxy();
+			//this.windowsInetBridge.disableProxy();
 			this.emit('connected');
 		});
 
