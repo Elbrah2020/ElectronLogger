@@ -7,6 +7,8 @@ var logger = new Logger();
 
 var selectedTab = 'connectionTab';
 
+
+
 window.onload = () => {
 	ipcRenderer.send('check_update');
 
@@ -32,6 +34,91 @@ window.onload = () => {
 
 	$('#appVersion').text('v' + package.version);
 
+	$.fn.inputFilter = function(inputFilter) {
+		return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+			if (inputFilter(this.value)) {
+				this.oldValue = this.value;
+				this.oldSelectionStart = this.selectionStart;
+				this.oldSelectionEnd = this.selectionEnd;
+			} else if (this.hasOwnProperty("oldValue")) {
+				this.value = this.oldValue;
+				this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+			} else {
+				this.value = "";
+			}
+		});
+	};
+
+	var input16bit = $('#16bitInput');
+	var input16bytes = $('#16bitBytes');
+
+	input16bit.inputFilter(value => {
+		return /^-?\d*$/.test(value) && (value === '' || (parseInt(value) >= -32768 && parseInt(value) <= 32767));
+	});
+
+	input16bit.on('input', () => {
+		let buffer = Buffer.alloc(2);
+		buffer.writeInt16BE(parseInt(input16bit.val()));
+		let bytes = logger.encodeBuffer(buffer);
+		input16bytes.val(bytes);
+	});
+
+	input16bytes.on('input', () => {
+		let buffer = logger.parseBuffer(input16bytes.val());
+		if (buffer.length < 2) {
+			input16bit.val(0);
+		} else {
+			input16bit.val(buffer.readInt16BE());
+		}
+	});
+
+	var input32bit = $('#32bitInput');
+	var input32bytes = $('#32bitBytes');
+
+	input32bit.inputFilter(value => {
+		return /^-?\d*$/.test(value) && (value === '' || (parseInt(value) >= -2147483648 && parseInt(value) <= 2147483647));
+	});
+
+	input32bit.on('input', () => {
+		let buffer = Buffer.alloc(4);
+		buffer.writeInt32BE(parseInt(input32bit.val()));
+		let bytes = logger.encodeBuffer(buffer);
+		input32bytes.val(bytes);
+	});
+
+	input32bytes.on('input', () => {
+		let buffer = logger.parseBuffer(input32bytes.val());
+		if (buffer.length < 4) {
+			input32bit.val(0);
+		} else {
+			input32bit.val(buffer.readInt32BE());
+		}
+	});
+
+	var input64bit = $('#64bitInput');
+	var input64bytes = $('#64bitBytes');
+
+	input64bit.inputFilter(value => {
+		return /^-?\d*$/.test(value) && (value === '' || (BigInt(value) >= -9223372036854775808n && BigInt(value) <= 9223372036854775807n));
+	});
+
+	input64bit.on('input', () => {
+		let buffer = Buffer.alloc(8);
+		buffer.writeBigInt64BE(BigInt(input64bit.val()));
+		let bytes = logger.encodeBuffer(buffer);
+		input64bytes.val(bytes);
+	});
+
+	input64bytes.on('input', () => {
+		let buffer = logger.parseBuffer(input64bytes.val());
+		if (buffer.length < 8) {
+			input64bit.val(0);
+		} else {
+			input64bit.val(buffer.readInt64BE());
+		}
+	});
+
+
 	$('#externalGithubButton').click(() => {
 		shell.openExternal('https://github.com/Elbrah2020/ElectronLogger');
 	});
@@ -54,12 +141,8 @@ window.onload = () => {
 		setLoggerStatus('secondary', 'Ready');
 	});
 
-	$('#connectionTabButton').click(() => {
-		loadTab('connectionTab');
-	});
-
-	$('#classicInjectionTabButton').click(() => {
-		loadTab('classicInjectionTab');
+	$('.menuLink').click(function () {
+		loadTab($(this).attr("target-menu"));
 	});
 
 	$('#injectSendClientButton').click(() => {
@@ -75,7 +158,7 @@ window.onload = () => {
 	});
 
 	$('.injectionTextarea').bind('input propertychange', function() {
-		let buffer = logger.parsePacket(this.value);
+		let buffer = logger.parseBuffer(this.value);
 
 		if (buffer.length >= 6) {
 			let packetLength = buffer.readInt32BE(0);

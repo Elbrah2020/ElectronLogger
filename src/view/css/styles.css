@@ -11,7 +11,17 @@
 	background: none;
 }
 
-#classicInjectionTab {
+textarea::selection {
+	color: white;
+	background: #212529;
+}
+
+input::selection {
+	color: white;
+	background: #212529;
+}
+
+.big-container {
 	max-width: 100%;
 }
 
@@ -20,11 +30,6 @@
 	margin-top: 14px;
 	resize: none;
 	height: 200px;
-}
-
-.injectionTextarea::selection {
-	color: white;
-	background: #212529;
 }
 
 .injectButtons {
@@ -49,4 +54,13 @@
 
 .injectInputHeaderSpan {
 	padding: 0.375rem .6rem;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.swap-separator {
+	width: 35px;
+	font-size: 24px;
 }

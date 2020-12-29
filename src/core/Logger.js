@@ -72,7 +72,7 @@ class Logger extends EventEmitter {
 
 	sendToClient(packetData) {
 		if (this.loggingEnabled && this.websocketServer.ws) {
-			let packet = new HabboMessage(this.parsePacket(packetData));
+			let packet = new HabboMessage(this.parseBuffer(packetData));
 			this.websocketServer.sendIncoming(this.websocketServer.ws, packet);
 		} else {
 			alert('Please connect before sending data.');
@@ -81,19 +81,33 @@ class Logger extends EventEmitter {
 
 	sendToServer(packetData) {
 		if (this.loggingEnabled && this.websocketServer.ws) {
-			let packet = new HabboMessage(this.parsePacket(packetData));
+			let packet = new HabboMessage(this.parseBuffer(packetData));
 			this.websocketServer.sendOutgoing(this.websocketServer.ws, packet);
 		} else {
 			alert('Please connect before sending data.');
 		}
 	}
 
-	parsePacket(packet) {
+	parseBuffer(buffer) {
 		for (var i = 0; i <= 13; i++) {
-			packet = Util.replaceAll('[' + i + ']', String.fromCharCode(i), packet);
+			buffer = Util.replaceAll('[' + i + ']', String.fromCharCode(i), buffer);
 		}
 
-		return Buffer.from(packet, 'binary');
+		return Buffer.from(buffer, 'binary');
+	}
+
+	encodeBuffer(buffer) {
+		let result = "";
+
+		for (let i = 0; i < buffer.length; i++) {
+			if (buffer[i] <= 13) {
+				result += "[" + buffer[i] + "]";
+			} else {
+				result += String.fromCharCode(buffer[i]);
+			}
+		}
+
+		return result;
 	}
 }
 
