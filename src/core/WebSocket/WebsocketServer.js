@@ -52,6 +52,8 @@ class WebsocketServer extends EventEmitter {
 		const clientRSA = new RSA();
 		clientRSA.setPrivate('C22DF39849BA2F27B2B33215CCDAB81361FE712C9F6505FB547F057F32F7AE2949D65EA29D44855549095004B94B1622FA54044C2FA634ADF527790DD8833CD59AA3EB30A3DF34D6F3C36D6F750C9E036398A1A49FE073DAAF5C9C4F38FCDDD0172B60BD0C7DCA585F7A666FD953EFD4A2C880A9CF378B5036DD2D822559C8FEF050D0B4518580AE771E4C58EB062E5F9B9E8F1288AD8939D129AFB53218B07DFA5595068096940EE5C8D53C3D14915CA1AA0B03E84A3C90666AAD97F9201502BD3C03F4A21A89E722A0ACE9FEAEFA64DAA0B5A9CDD0887C1AB7BC90B37947D6ABD7F7DCE6626AB232D6F2B1410FA592C637D5B0B5C66DDB3FD1D52A6AC1BC21', '10001', '3325435A436124F681DD2D3E0CBD376AF38EBF648F7F5E79FAA19263149BA465FFAAD53663D21E847E3E53B34AD2FA3BB04FDCE9EC4B0CE91CFF8EA514F84C57BEE99A132FB6A5065122927A9F0BF9BACECAEF189B7BD5482E94681F7DD52CDF989AB65A5525F4DC1E19F14D58A30132B2C5B90E0124922F48A42D4E70641BCA85193882D983B6E464893F05C0B8E4526A753E48F78ADBAA299E1B0C9009D24C6B10D8A04B8B640885F1BCE4736FD0B3B3D1D869CAF4C535C128E7D086D00FB8B6EADEE3569D26879E446CD29CEB10513509F197157D3CE9E89D6379DA3D1E0EC9284845FE211A82F828B2A728FCCA5EC053EAE870FCE6A7B069CD432F84D6B9');
 
+		this.packetHooks = [];
+
 		this.wsServer = new WebSocket.Server({ port: port });
 
 		this.wsServer.on('connection', async (ws, req) => {
@@ -89,6 +91,17 @@ class WebsocketServer extends EventEmitter {
 						let packets = this.parseBuffer(ws, buffer, false);
 
 						packets.forEach(packet => {
+							for(let i = 0; i < this.packetHooks.length; i++) {
+								let method = this.packetHooks[i];
+
+								if (method) {
+									let methodResult = method(new HabboMessage(packet.buffer, packet.isOutgoing(), packet.name));
+
+									if (methodResult === false)
+										return;
+								}
+							}
+
 							switch(packet.header) {
 								case 278:
 									ws.diffieHellman.prime = new BigInteger(serverRSA.verify(packet.readString()), 10);
@@ -146,6 +159,17 @@ class WebsocketServer extends EventEmitter {
 
 					if(ws.tlsClientClearStream) {
 						packets.forEach(packet => {
+							for(let i = 0; i < this.packetHooks.length; i++) {
+								let method = this.packetHooks[i];
+
+								if (method) {
+									let methodResult = method(new HabboMessage(packet.buffer, packet.isOutgoing(), packet.name));
+
+									if (methodResult === false)
+										return;
+								}
+							}
+
 							switch(packet.header) {
 								case 4000:
 									let nonce = packet.readString();
@@ -271,9 +295,9 @@ class WebsocketServer extends EventEmitter {
 		let target = isOutgoing ? ws.tlsClientClearStream : ws.tlsServerClearStream;
 
 		if (isOutgoing) {
-			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header, this.headersData.outgoing[packet.header]);
+			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header, packet.name);
 		} else {
-			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, this.headersData.incoming[packet.header]);
+			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, packet.name);
 		}
 
 		let buffer = packet.get();
@@ -313,7 +337,7 @@ class WebsocketServer extends EventEmitter {
 				return packets;
 			}
 
-			let length = buffer.readUInt32BE(0) + 4;
+			let length = buffer.readInt32BE(0) + 4;
 
 			if (length > buffer.length) {
 				if (isOutgoing) {
@@ -344,12 +368,25 @@ class WebsocketServer extends EventEmitter {
 				reverse(ws.crypto.server.incomingChaCha.decrypt(headerBytes)).copy(packet, 4);
 			}
 
-			packets.push(new HabboMessage(packet));
+			let packetHeader = packet.readInt16BE(4);
+
+			packets.push(new HabboMessage(packet, isOutgoing, (isOutgoing ? this.headersData.outgoing[packetHeader] : this.headersData.incoming[packetHeader])));
 
 			buffer = buffer.slice(length);
 		}
 
 		return packets;
+	}
+
+	registerPacketHook(method) {
+		if (typeof method != 'function')
+			return;
+
+		return this.packetHooks.push(method) - 1;
+	}
+
+	unregisterPacketHook(index) {
+		delete this.packetHooks[index];
 	}
 
 	async stop() {

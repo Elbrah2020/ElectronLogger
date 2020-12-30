@@ -1,17 +1,11 @@
 class HabboMessage {
-	constructor(buffer) {
+	constructor(buffer, outgoing, name) {
 		this.position = 0;
 		this.buffer = buffer;
 		this.length = this.readInt();
 		this.header = this.readShort();
-	}
-
-	setIncoming() {
-		this.incoming = true;
-	}
-
-	setOutgoing() {
-		this.outgoing = true;
+		this.outgoing = outgoing;
+		this.name = name;
 	}
 
 	readLong() {
@@ -82,6 +76,14 @@ class HabboMessage {
 		}
 
 		return result;
+	}
+
+	isOutgoing() {
+		return this.isOutgoing;
+	}
+
+	isIncoming() {
+		return !this.isOutgoing;
 	}
 }
 
