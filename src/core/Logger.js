@@ -9,6 +9,7 @@ const WebsocketServer = require('./WebSocket/WebsocketServer');
 const HeadersData = require('./Util/HeadersData');
 const HabboMessage = require('./Protocol/HabboMessage');
 const Util = require('./Util/Util');
+const getPort = require('get-port');
 
 class Logger extends EventEmitter {
 	async initialize() {
@@ -25,11 +26,14 @@ class Logger extends EventEmitter {
 
 		this.windowsInetBridge = new WindowsInetBridge();
 
-		this.sslServer = new SslServer();
-		this.sslProxy = new SslProxy({ host: '127.0.0.1', port: 3335 }, ['images.habbo.com', 'www.habbo.com', 'www.habbo.com.br', 'www.habbo.com.tr', 'www.habbo.de', 'www.habbo.es', 'www.habbo.fi', 'www.habbo.fr', 'www.habbo.it', 'www.habbo.nl']);
+		this.sslServerPort = await getPort();
+		this.sslProxyPort = await getPort();
 
-		await this.sslProxy.startServer(3334);
-		await this.sslServer.startServer(3335, SslHandler);
+		this.sslServer = new SslServer();
+		this.sslProxy = new SslProxy({ host: '127.0.0.1', port: this.sslServerPort }, ['images.habbo.com', 'www.habbo.com', 'www.habbo.com.br', 'www.habbo.com.tr', 'www.habbo.de', 'www.habbo.es', 'www.habbo.fi', 'www.habbo.fr', 'www.habbo.it', 'www.habbo.nl']);
+
+		await this.sslProxy.startServer(this.sslProxyPort);
+		await this.sslServer.startServer(this.sslServerPort, SslHandler);
 
 		this.loggingEnabled = false;
 		this.emit('ready');
@@ -39,14 +43,17 @@ class Logger extends EventEmitter {
 		if (this.loggingEnabled)
 			return;
 
-		this.windowsInetBridge.setProxy('https=127.0.0.1:3334');
+		this.windowsInetBridge.setProxy('https=127.0.0.1:' + this.sslProxyPort);
 
 		this.websocketServer = new WebsocketServer();
 		this.websocketServer.headersData = this.headersData;
-		this.websocketServer.startServer(3336);
+
+		this.wsPort = await getPort();
+		this.sslServer.wsPort = this.wsPort;
+		this.websocketServer.startServer(this.wsPort);
 
 		this.websocketServer.on('connected', () => {
-			//this.windowsInetBridge.disableProxy();
+			this.windowsInetBridge.disableProxy();
 			this.emit('connected');
 		});
 

@@ -9,10 +9,15 @@ class SslServer {
 		  cert: fs.readFileSync(path.join(__dirname, '../../../certs/selfsigned/habbo.crt')),
 		  ca: fs.readFileSync(path.join(__dirname, '../../../certs/selfsigned/ca.crt'))
 		}
+
+		this.wsPort = 0;
 	}
 
 	async startServer(port, sslHandler) {
-		this.server = https.createServer(this.options, sslHandler);
+		this.server = https.createServer(this.options, (req, res) => {
+			req.sslServer = this;
+			sslHandler(req, res);
+		});
 
 		return await this.server.listen(port, '127.0.0.1');
 	}
