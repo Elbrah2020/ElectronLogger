@@ -234,7 +234,11 @@ class WebsocketServer extends EventEmitter {
 				if (websocketInputData == 'StartTLS') {
 					ws.send(Buffer.from('OK'));
 				} else {
-					ws.tlsServerGateway.write(websocketInputData);
+					if (typeof websocketInputData == 'string') {
+						console.log(websocketInputData);
+					} else {
+						ws.tlsServerGateway.write(websocketInputData);
+					}
 				}
 			});
 

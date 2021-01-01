@@ -33,6 +33,10 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 				body = body.toString().replace('.data.unityweb', '.data.unityweb?' + Random.getRandomHash());
 				body = body.replace('.framework.unityweb', '.framework.unityweb?' + Random.getRandomHash());
 
+				if (req.sslServer.loggerInstance.enableExperimentalStructure) {
+					body = body.replace('.code.unityweb', '.code.patched.unityweb');
+				}
+
 				res.setHeader('access-control-allow-headers', 'Accept, Content-Type, Origin, X-Requested-With, Pragma, X-App-Key, Cache-Control');
 				res.setHeader('access-control-allow-methods', 'POST, GET, OPTIONS');
 				res.setHeader('access-control-allow-origin', '*');
@@ -43,6 +47,10 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 			if (req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.wasm.framework.unityweb?')) {
 				body = body.toString().replace('webSocketState.instances[id]={url:urlStr,ws:null}', 'webSocketState.instances[id]={url:"ws://localhost:' + req.sslServer.wsPort + '/",ws:null}');
 
+				if (req.sslServer.loggerInstance.enableExperimentalStructure) {
+					body = body.replace('_JS_Log_Dump(ptr,type){', '_JS_Log_Dump(ptr,type){' + "if(type>6000&&type<7000){var instance=webSocketState.instances[0];if(!instance||!instance.ws)return;switch(type){case 6661:let i64firstByte=BigInt(HEAPU8[ptr+23]);let i64secondByte=BigInt(HEAPU8[ptr+22]);let i64thirdByte=BigInt(HEAPU8[ptr+21]);let i64fourthByte=BigInt(HEAPU8[ptr+20]);let i64fifthByte=BigInt(HEAPU8[ptr+19]);let i64sixthByte=BigInt(HEAPU8[ptr+18]);let i64seventhByte=BigInt(HEAPU8[ptr+17]);let i64eighthByte=BigInt(HEAPU8[ptr+16]);let i64=(i64firstByte<<56n)+(i64secondByte<<48n)+(i64thirdByte<<40n)+(i64fourthByte<<32n)+(i64fifthByte<<24n)+(i64sixthByte<<16n)+(i64seventhByte<<8n)+(i64eighthByte<<0n);instance.ws.send('rl.'+i64);break;case 6662:let i32firstByte=HEAPU8[ptr+19];let i32secondByte=HEAPU8[ptr+18];let i32thirdByte=HEAPU8[ptr+17];let i32fourthByte=HEAPU8[ptr+16];let i32=(i32firstByte<<24)+(i32secondByte<<16)+(i32thirdByte<<8)+(i32fourthByte<<0);instance.ws.send('ri.'+i32);break;case 6663:let i16firstByte=HEAPU8[ptr+17];let i16secondByte=HEAPU8[ptr+16];let i16=(i16firstByte<<8)+(i16secondByte<<0);instance.ws.send('rs.'+i16);break;case 6664:let boolByte=HEAPU8[ptr+16];instance.ws.send('rb.'+boolByte);break;case 6665:instance.ws.send('wl.'+ptr);break;case 6666:instance.ws.send('wi.'+ptr);break;case 6667:instance.ws.send('ws.'+ptr);break;case 6668:instance.ws.send('wb.'+ptr);break;}return;}");
+				}
+
 				res.setHeader('access-control-allow-headers', 'Accept, Content-Type, Origin, X-Requested-With, Pragma, X-App-Key, Cache-Control');
 				res.setHeader('access-control-allow-methods', 'POST, GET, OPTIONS');
 				res.setHeader('access-control-allow-origin', '*');
@@ -51,6 +59,15 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 			}
 
 			if (req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.data.unityweb?')) {
+				res.setHeader('access-control-allow-headers', 'Accept, Content-Type, Origin, X-Requested-With, Pragma, X-App-Key, Cache-Control');
+				res.setHeader('access-control-allow-methods', 'POST, GET, OPTIONS');
+				res.setHeader('access-control-allow-origin', '*');
+				res.setHeader('access-control-expose-headers', 'ETag');
+
+				res.end(body);
+			}
+
+			if (req.sslServer.loggerInstance.enableExperimentalStructure && req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.wasm.code.patched.unityweb')) {
 				res.setHeader('access-control-allow-headers', 'Accept, Content-Type, Origin, X-Requested-With, Pragma, X-App-Key, Cache-Control');
 				res.setHeader('access-control-allow-methods', 'POST, GET, OPTIONS');
 				res.setHeader('access-control-allow-origin', '*');
@@ -94,6 +111,14 @@ module.exports = (req, res) => {
 	}
 
 	if (req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.data.unityweb?')) {
+		req.headers.host = 'jxz.be';
+		req.headers.from = 'ElectronLogger';
+		proxyOptions.target = 'https://jxz.be';
+		proxyOptions.selfHandleResponse = true;
+		req.parseChunk = true;
+	}
+
+	if (req.sslServer.loggerInstance.enableExperimentalStructure && req.url.includes('/WebGL/habbo2020-global-prod/Build/habbo2020-global-prod.wasm.code.patched.unityweb')) {
 		req.headers.host = 'jxz.be';
 		req.headers.from = 'ElectronLogger';
 		proxyOptions.target = 'https://jxz.be';

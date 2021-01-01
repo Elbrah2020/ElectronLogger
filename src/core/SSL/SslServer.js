@@ -13,7 +13,9 @@ class SslServer {
 		this.wsPort = 0;
 	}
 
-	async startServer(port, sslHandler) {
+	async startServer(port, sslHandler, loggerInstance) {
+		this.loggerInstance = loggerInstance;
+
 		this.server = https.createServer(this.options, (req, res) => {
 			req.sslServer = this;
 			sslHandler(req, res);
