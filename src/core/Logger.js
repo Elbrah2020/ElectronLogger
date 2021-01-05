@@ -32,7 +32,7 @@ class Logger extends EventEmitter {
 		this.sslServer = new SslServer();
 		this.sslProxy = new SslProxy({ host: '127.0.0.1', port: this.sslServerPort }, ['images.habbo.com', 'www.habbo.com', 'www.habbo.com.br', 'www.habbo.com.tr', 'www.habbo.de', 'www.habbo.es', 'www.habbo.fi', 'www.habbo.fr', 'www.habbo.it', 'www.habbo.nl']);
 
-		this.enableExperimentalStructure = true;
+		this.enableExperimentalStructure = false;
 
 		await this.sslProxy.startServer(this.sslProxyPort);
 		await this.sslServer.startServer(this.sslServerPort, SslHandler, this);

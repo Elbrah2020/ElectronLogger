@@ -82,8 +82,12 @@ class WebsocketServer extends EventEmitter {
 				ws.clientWebsocket.send(Buffer.from('StartTLS'));
 			});
 
-			ws.clientWebsocket.on('message', data => {
+			ws.clientWebsocket.on('message', async data => {
 				if (data == 'OK') {
+					while(!ws.tlsServerClearStream) {
+						await new Promise(resolve => setTimeout(resolve, 200));
+					}
+
 					ws.tlsClientClearStream = tls.connect(ws.tlsClientGateway.address().port, sslClientOptions, () => {
 					});
 
@@ -144,6 +148,9 @@ class WebsocketServer extends EventEmitter {
 						});
 					});
 				} else {
+					while(!ws.tlsClientSocket) {
+						await new Promise(resolve => setTimeout(resolve, 200));
+					}
 					ws.tlsClientSocket.write(data);
 				}
 			});
