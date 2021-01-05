@@ -6,6 +6,7 @@ class HabboMessage {
 		this.header = this.readShort();
 		this.outgoing = outgoing;
 		this.name = name;
+		this.structure = null;
 	}
 
 	readLong() {
@@ -46,10 +47,6 @@ class HabboMessage {
 	}
 
 	readBool() {
-		if (this.position == this.buffer.length - 1)
-			throw 'Not enough bytes';
-
-
 		let bool = this.buffer[0] == 1;
 		this.position += 1;
 
@@ -84,6 +81,10 @@ class HabboMessage {
 
 	isIncoming() {
 		return !this.isOutgoing;
+	}
+
+	remainingBytes() {
+		return this.buffer.length - this.position;
 	}
 }
 

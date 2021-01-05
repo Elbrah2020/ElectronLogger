@@ -34,6 +34,10 @@ window.onload = () => {
 
 	$('#appVersion').text('v' + package.version);
 
+	$('#experimentalStructureSwitch').change(function () {
+		logger.enableExperimentalStructure = this.checked;
+	});
+
 	$.fn.inputFilter = function(inputFilter) {
 		return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
 			if (inputFilter(this.value)) {

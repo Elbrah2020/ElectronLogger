@@ -64,3 +64,7 @@ input::selection {
 	width: 35px;
 	font-size: 24px;
 }
+
+.experimentalStructure {
+	width: 362px;
+}

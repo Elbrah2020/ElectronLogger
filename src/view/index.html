@@ -4,6 +4,7 @@
       <title>ElectronLogger - Loading..</title>
       <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
       <link href="./css/styles.css" rel="stylesheet" crossorigin="anonymous">
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline';img-src 'self' data:;">
       <script type="text/javascript" src="./bootstrap/js/bootstrap.bundle.min.js"></script>
       <script type="text/javascript">
          var $ = global.jQuery = require('./js/jquery-3.5.1.min');
@@ -53,6 +54,10 @@
                   Just press the button and load the client ☺<br/>
                   <button type="button" class="btn btn-success" id="startLoggingButton">Start logging</button>
                   <button type="button" class="btn btn-danger hidden" id="stopLoggingButton">Stop logging</button>
+                  <div class="mb-3 form-check form-switch experimentalStructure">
+                    <input class="form-check-input" type="checkbox" id="experimentalStructureSwitch">
+                    <label class="form-check-label" for="experimentalStructureSwitch">Enable experimental packet structure resolver</label>
+                  </div>
                </p>
             </center>
          </main>

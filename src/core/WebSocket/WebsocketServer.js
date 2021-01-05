@@ -1,9 +1,10 @@
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 const HabboMessageBuilder = require('../Protocol/HabboMessageBuilder');
-const BigInteger = require('../Util/BigInteger');
+const StructureHelper = require('../Protocol/StructureHelper');
 const HabboMessage = require('../Protocol/HabboMessage');
 const ChaCha20 = require('../Crypto/JSChaCha20');
+const BigInteger = require('../Util/BigInteger');
 const RSA = require('../Crypto/RSA');
 
 const { BrowserWindow, Menu, MenuItem } = require('electron').remote;
@@ -17,7 +18,9 @@ const net = require('net');
 const fs = require('fs');
 
 class WebsocketServer extends EventEmitter {
-	startServer(port) {
+	startServer(port, logger) {
+		this.logger = logger;
+
 		this.packetloggerWindow = new BrowserWindow({
 			height: 600,
 			width: 700,
@@ -28,6 +31,10 @@ class WebsocketServer extends EventEmitter {
 				nodeIntegrationInWorker: true
 			}
 		});
+
+		if (this.logger.enableExperimentalStructure) {
+			this.structureHelper = new StructureHelper(this.packetloggerWindow);
+		}
 
 		this.setupWindowMenu();
 
@@ -235,7 +242,9 @@ class WebsocketServer extends EventEmitter {
 					ws.send(Buffer.from('OK'));
 				} else {
 					if (typeof websocketInputData == 'string') {
-						console.log(websocketInputData);
+						if (this.logger.enableExperimentalStructure) {
+							this.structureHelper.parse(websocketInputData);
+						}
 					} else {
 						ws.tlsServerGateway.write(websocketInputData);
 					}
@@ -243,11 +252,11 @@ class WebsocketServer extends EventEmitter {
 			});
 
 			ws.on('close', () => {
-				this.emit('disconnected');
+				//this.emit('disconnected');
 			});
 
 			ws.clientWebsocket.on('close', () => {
-				this.emit('disconnected');
+				//this.emit('disconnected');
 			});
 		});
 	}
@@ -298,11 +307,13 @@ class WebsocketServer extends EventEmitter {
 	sendPacket(ws, packet, isOutgoing) {
 		let target = isOutgoing ? ws.tlsClientClearStream : ws.tlsServerClearStream;
 
-		if (isOutgoing) {
-			this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header, packet.name);
-		} else {
-			this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, packet.name);
-		}
+		//if (!this.logger.enableExperimentalStructure) {
+			if (isOutgoing) {
+				//this.packetloggerWindow.webContents.send('outgoingMessage', packet.getMessageBody(true), packet.header, packet.name);
+			} else {
+				this.packetloggerWindow.webContents.send('incomingMessage', packet.getMessageBody(true), packet.header, packet.name);
+			}
+		//}
 
 		let buffer = packet.get();
 
@@ -375,6 +386,13 @@ class WebsocketServer extends EventEmitter {
 			let packetHeader = packet.readInt16BE(4);
 
 			packets.push(new HabboMessage(packet, isOutgoing, (isOutgoing ? this.headersData.outgoing[packetHeader] : this.headersData.incoming[packetHeader])));
+
+			if (this.logger.enableExperimentalStructure) {
+				if (isOutgoing)
+					this.structureHelper.outgoingPacketQueue.push(new HabboMessage(packet, isOutgoing, (isOutgoing ? this.headersData.outgoing[packetHeader] : this.headersData.incoming[packetHeader])));
+				else
+					this.structureHelper.incomingPacketQueue.push(new HabboMessage(packet, isOutgoing, (isOutgoing ? this.headersData.outgoing[packetHeader] : this.headersData.incoming[packetHeader])));
+			}
 
 			buffer = buffer.slice(length);
 		}

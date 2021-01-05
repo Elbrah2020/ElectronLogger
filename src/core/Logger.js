@@ -52,7 +52,7 @@ class Logger extends EventEmitter {
 
 		this.wsPort = await getPort();
 		this.sslServer.wsPort = this.wsPort;
-		this.websocketServer.startServer(this.wsPort);
+		this.websocketServer.startServer(this.wsPort, this);
 
 		this.websocketServer.on('connected', () => {
 			this.windowsInetBridge.disableProxy();
