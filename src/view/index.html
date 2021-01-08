@@ -7,7 +7,8 @@
       <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline';img-src 'self' data:;">
       <script type="text/javascript" src="./bootstrap/js/bootstrap.bundle.min.js"></script>
       <script type="text/javascript">
-         var $ = global.jQuery = require('./js/jquery-3.5.1.min');
+         var $ = global.jQuery = require('jquery');
+         require('jquery-ui-dist/jquery-ui');
          require('./js/renderer.js');
       </script>
    </head>
@@ -31,7 +32,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownInjection" data-bs-toggle="dropdown" aria-expanded="false">Injection</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownInjection">
                            <li><a class="dropdown-item menuLink" target-menu="classicInjectionTab" href="#">Classic mode</a></li>
-                           <li><a class="dropdown-item disabled" href="#">Expert mode</a></li>
+                           <li><a class="dropdown-item menuLink" target-menu="expertInjectionTab" href="#">Expert mode</a></li>
                            <li><a class="dropdown-item disabled" href="#">Timer mode</a></li>
                            <li><a class="dropdown-item disabled" href="#">Filters</a></li>
                         </ul>
@@ -135,6 +136,9 @@
                   </tr>
                </table>
             </div>
+         </main>
+         <main class="container big-container hidden" id="expertInjectionTab">
+            <h1>test</h1>
          </main>
          <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">
             <div class="container-fluid">

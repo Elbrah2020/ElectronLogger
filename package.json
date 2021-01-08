@@ -27,6 +27,8 @@
     "http-string-parser": "0.0.6",
     "is-elevated": "^3.0.0",
     "is-gzip": "^2.0.0",
+    "jquery": "^3.5.1",
+    "jquery-ui-dist": "^1.12.1",
     "node-gzip": "^1.1.2",
     "node-powershell": "^4.0.0",
     "request": "^2.88.2",
