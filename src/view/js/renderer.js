@@ -183,6 +183,8 @@ window.onload = () => {
 			$('#loadingInterface').fadeOut('slow', () => {
 				$('#packetloggerInterface').fadeIn('slow');
 			});
+
+			populateToolsPacketData(logger.headersData);
 		});
 
 		logger.on('connected', () => {
@@ -253,4 +255,25 @@ function setInjectionState(isCorrupted, length, header) {
 
 	$('#injectLengthInput').val(length);
 	$('#injectHeaderInput').val(header);
+}
+
+function populateToolsPacketData(packetHeaders) {
+	let incomingTable = $('#table-tools-incoming > tbody');
+	let outgoingTable = $('#table-tools-outgoing > tbody');
+
+	Object.keys(packetHeaders.incoming).forEach(key => {
+		incomingTable.append('<tr><td>' + packetHeaders.incoming[key] + '&nbsp;<button type="button" class="btn btn-secondary clipboard-write btn-sml" data-clipboard="' + packetHeaders.incoming[key] + '"><i class="far fa-copy"></i></button></td><td>' + key + '&nbsp;<button type="button" class="btn btn-secondary clipboard-write btn-sml" data-clipboard="' + key + '"><i class="far fa-copy"></i></button></td></tr>');
+	});
+
+	Object.keys(packetHeaders.outgoing).forEach(key => {
+		outgoingTable.append('<tr><td>' + packetHeaders.outgoing[key] + '&nbsp;<button type="button" class="btn btn-secondary clipboard-write btn-sml" data-clipboard="' + packetHeaders.outgoing[key] + '"><i class="far fa-copy"></i></button></td><td>' + key + '&nbsp;<button type="button" class="btn btn-secondary clipboard-write btn-sml" data-clipboard="' + key + '"><i class="far fa-copy"></i></button></td></tr>');
+	});
+
+	$('.clipboard-write').click(function() {
+		navigator.clipboard.writeText($(this).attr('data-clipboard')).then(function() {
+
+		}, function() {
+
+		});
+	});
 }
