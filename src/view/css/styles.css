@@ -21,19 +21,20 @@ input::selection {
 	background: #212529;
 }
 
+.btn:focus {
+	box-shadow: none;
+}
+
 .big-container {
 	max-width: 100%;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .injectionTextarea {
 	width: 100%;
-	margin-top: 14px;
 	resize: none;
 	height: 200px;
-}
-
-.injectButtons {
-	margin-top: 5px;
 }
 
 #packetCorruptedButton {
@@ -63,4 +64,51 @@ input::selection {
 .swap-separator {
 	width: 35px;
 	font-size: 24px;
+}
+
+.table-fix-head {
+	overflow-y: scroll;
+	height: 164px;
+}
+
+.table-fix-head table {
+	font-size: 12px;
+	margin: 0;
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+.table-fix-head thead th {
+	position: sticky;
+	top: 0;
+	background-color: #ffffff;
+}
+
+.table-fix-head thead th:nth-of-type(1) {
+	width: 11%;
+}
+
+.table-fix-head thead th:nth-of-type(2) {
+	width: 33%;
+}
+
+.table-fix-head thead th:nth-of-type(3) {
+	width: 42%;
+}
+
+.table-fix-head thead th:nth-of-type(4) {
+	width: 17%;
+}
+
+.btn-sml {
+	font-size: 8px;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+}
+
+.btn-sml i {
+	margin-top: -5px;
+	padding: 0;
+	position: relative;
 }

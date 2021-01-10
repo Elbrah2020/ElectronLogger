@@ -4,7 +4,8 @@
       <title>ElectronLogger - Loading..</title>
       <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
       <link href="./css/styles.css" rel="stylesheet" crossorigin="anonymous">
-      <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline';img-src 'self' data:;">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline';img-src 'self' data:;font-src 'self' data: https:;style-src-elem 'self' data: https:;">
       <script type="text/javascript" src="./bootstrap/js/bootstrap.bundle.min.js"></script>
       <script type="text/javascript">
          var $ = global.jQuery = require('jquery');
@@ -52,7 +53,7 @@
          <main class="container" id="connectionTab">
             <center>
                <p class="display-3">
-                  Just press the button and load the client ☺<br/>
+                  <strong>Just press the button and load the client <i class="far fa-smile-beam"></i></strong><br/>
                   <button type="button" class="btn btn-success" id="startLoggingButton">Start logging</button>
                   <button type="button" class="btn btn-danger hidden" id="stopLoggingButton">Stop logging</button>
                </p>
@@ -108,8 +109,8 @@
             </table>
          </main>
          <main class="container big-container hidden" id="classicInjectionTab">
-            <textarea class="form-control injectionTextarea"></textarea>
-            <div class="injectButtons">
+            <textarea class="form-control injectionTextarea mt-3"></textarea>
+            <div class="mt-1">
                <table>
                   <tr>
                      <td>
@@ -138,7 +139,106 @@
             </div>
          </main>
          <main class="container big-container hidden" id="expertInjectionTab">
-            <h1>test</h1>
+            <table class="mt-2">
+               <tr>
+                  <td style="width: 24%;">
+                     <div class="input-group has-validation">
+                        <span class="input-group-text injectInputLengthSpan">Header</span>
+                        <input type="text" id="expertInjectHeaderInput" class="form-control" value="0">
+                     </div>
+                  </td>
+                  <td style="width: 18%;">
+                     <select class="form-select">
+                       <option selected>Type</option>
+                       <option value="string">String</option>
+                       <option value="boolean">Boolean</option>
+                       <option value="short">Short</option>
+                       <option value="integer">Integer</option>
+                       <option value="long">Long</option>
+                     </select>
+                  </td>
+                  <td style="width: 47%;">
+                     <input type="text" class="form-control" id="expertInjectionValueInput" placeholder="Value">
+                  </td>
+                  <td>
+                     <button type="button" class="btn btn-success" id="expertInjectionWriteButton" disabled>Write</button>
+                  </td>
+               </tr>
+            </table>
+            <div class="table-fix-head border mt-1">
+               <table class="table table-hover">
+                  <thead>
+                     <tr>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Encoded</th>
+                        <th>Action</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>Integer</td>
+                        <td>0</td>
+                        <td>[0][0][0][0]</td>
+                        <td>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
+                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
+                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>String</td>
+                        <td>Hello</td>
+                        <td>[0][5]Hello</td>
+                        <td>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
+                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
+                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>Long</td>
+                        <td>9223372036854775807</td>
+                        <td>ÿÿÿÿÿÿÿ</td>
+                        <td>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
+                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
+                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>[0]</td>
+                        <td>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
+                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
+                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
+                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <table class="mt-1">
+               <tr>
+                  <td style="width: 55%;">
+                     <div class="input-group has-validation">
+                        <span class="input-group-text injectInputLengthSpan">Output&nbsp;<a href="#"><i class="far fa-copy"></i></a></span>
+                        <input type="text" id="expertInjectHeaderInput" class="form-control" value="">
+                     </div>
+                  </td>
+                  <td>
+                     <button type="button" class="btn btn-success" id="expertInjectSendClientButton" disabled>Send to Client</button>
+                  </td>
+                  <td>
+                     <button type="button" class="btn btn-success" id="expertInjectSendClientButton" disabled>Send to Server</button>
+                  </td>
+               </tr>
+            </table>
          </main>
          <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark footer-navbar">
             <div class="container-fluid">

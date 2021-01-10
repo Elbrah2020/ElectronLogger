@@ -10,6 +10,8 @@ var selectedTab = 'connectionTab';
 
 
 window.onload = () => {
+	//$('tbody').sortable();
+
 	ipcRenderer.send('check_update');
 
 	ipcRenderer.on('checking_for_update', () => {
