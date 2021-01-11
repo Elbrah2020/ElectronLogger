@@ -178,8 +178,8 @@
                      </div>
                   </td>
                   <td style="width: 18%;">
-                     <select class="form-select">
-                       <option selected>Type</option>
+                     <select class="form-select" id="expertInjectTypeInput">
+                       <option value="default" selected>Type</option>
                        <option value="string">String</option>
                        <option value="boolean">Boolean</option>
                        <option value="short">Short</option>
@@ -206,50 +206,6 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr>
-                        <td>Integer</td>
-                        <td>0</td>
-                        <td>[0][0][0][0]</td>
-                        <td>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
-                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
-                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>String</td>
-                        <td>Hello</td>
-                        <td>[0][5]Hello</td>
-                        <td>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
-                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
-                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Long</td>
-                        <td>9223372036854775807</td>
-                        <td>ÿÿÿÿÿÿÿ</td>
-                        <td>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
-                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
-                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Boolean</td>
-                        <td>false</td>
-                        <td>[0]</td>
-                        <td>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-up"></i></button>
-                           <button type="button" class="btn btn-primary btn-sml"><i class="fas fa-arrow-down"></i></button>
-                           <button type="button" class="btn btn-secondary btn-sml"><i class="fas fa-pen"></i></button>
-                           <button type="button" class="btn btn-danger btn-sml"><i class="fas fa-times"></i></button>
-                        </td>
-                     </tr>
                   </tbody>
                </table>
             </div>
@@ -258,14 +214,14 @@
                   <td style="width: 55%;">
                      <div class="input-group has-validation">
                         <span class="input-group-text injectInputLengthSpan">Output&nbsp;<a href="#"><i class="far fa-copy"></i></a></span>
-                        <input type="text" id="expertInjectHeaderInput" class="form-control" value="">
+                        <input type="text" id="expertInjectPacketOutput" class="form-control" value="[0][0][0][2][0][0]">
                      </div>
                   </td>
                   <td>
-                     <button type="button" class="btn btn-success" id="expertInjectSendClientButton" disabled>Send to Client</button>
+                     <button type="button" class="btn btn-success" id="expertInjectSendClientButton">Send to Client</button>
                   </td>
                   <td>
-                     <button type="button" class="btn btn-success" id="expertInjectSendClientButton" disabled>Send to Server</button>
+                     <button type="button" class="btn btn-success" id="expertInjectSendServerButton">Send to Server</button>
                   </td>
                </tr>
             </table>

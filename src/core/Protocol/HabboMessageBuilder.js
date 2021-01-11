@@ -10,7 +10,7 @@ class HabboMessageBuilder {
 	}
 
 	appendString(str) {
-    let stringBuffer = Buffer.from(str);
+    let stringBuffer = Buffer.from(str, 'binary');
     let lengthBuffer = Buffer.alloc(2);
     lengthBuffer.writeInt16BE(stringBuffer.length, 0);
 
