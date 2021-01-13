@@ -295,7 +295,7 @@ window.onload = () => {
 			let append = '<tr><td>' + (entry.type.charAt(0).toUpperCase() + entry.type.slice(1)) + '</td><td>' + entry.value + '</td><td>' + entry.encoded + '</td>';
 			append += '<td data-key="' + key + '"><button type="button" class="btn btn-primary btn-sml" data-action="up" ' + (key == 0 ? 'disabled' : '') + '><i class="fas fa-arrow-up"></i></button>&nbsp;';
 			append += '<button type="button" class="btn btn-primary btn-sml" data-action="down" ' + (key == expertInjectionData.table.length - 1 ? 'disabled' : '') + '><i class="fas fa-arrow-down"></i></button>&nbsp;';
-			append += '<button type="button" class="btn btn-secondary btn-sml" data-action="edit"><i class="fas fa-pen" disabled></i></button>&nbsp;';
+			append += '<button type="button" class="btn btn-secondary btn-sml" data-action="edit" disabled><i class="fas fa-pen"></i></button>&nbsp;';
 			append += '<button type="button" class="btn btn-danger btn-sml" data-action="remove"><i class="fas fa-times"></i></button></td></tr>';
 
 			expertInjectionTable.append(append);

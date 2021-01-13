@@ -51,6 +51,8 @@ app.on('activate', () => {
 	}
 });
 
+app.allowRendererProcessReuse = false;
+
 ipcMain.on('check_update', () => {
 	autoUpdater.checkForUpdatesAndNotify();
 });
